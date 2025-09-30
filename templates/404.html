@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<!-- saved from url=(0036)https://almatypolytech.edu.kz/asdsad -->
+<html lang="kk"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Қате - АЛМАТЫ ПОЛИТЕХНИКАЛЫҚ КОЛЛЕДЖІ</title>
+    <link rel="icon" href="https://almatypolytech.edu.kz/static/images/header/icon_site_logo.svg" type="image/x-icon">
+    <link href="./404_files/css2" rel="stylesheet">
+    <style>
+        :root {
+            --neon-blue: #00bfff;
+            --neon-pink: #ff00ff;
+            --neon-green: #00ff00;
+            --dark-bg: #0a0e17;
+        }
+        
+        body {
+            background-color: var(--dark-bg);
+            color: var(--neon-green);
+            font-family: 'Share Tech Mono', monospace;
+            overflow: hidden;
+            margin: 0;
+            position: relative;
+            min-height: 100vh;
+        }
+        
+        .matrix-rain {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.3;
+        }
+        
+        .error-windows {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+        
+        .error-window {
+            position: absolute;
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid var(--neon-blue);
+            padding: 1rem;
+            box-shadow: 0 0 15px var(--neon-blue);
+            text-align: center;
+            animation: glitch-window 2s infinite;
+        }
+        
+        /* Расположение окон на десктопе */
+        .error-window:nth-child(1) { top: 10%; left: 5%; width: 300px; animation-delay: 0s; }
+        .error-window:nth-child(2) { top: 15%; left: 30%; width: 280px; animation-delay: 0.2s; }
+        .error-window:nth-child(3) { top: 40%; left: 20%; width: 320px; animation-delay: 0.4s; }
+        .error-window:nth-child(4) { top: 50%; left: 45%; width: 300px; animation-delay: 0.6s; }
+        .error-window:nth-child(5) { top: 20%; left: 60%; width: 280px; animation-delay: 0.8s; }
+        .error-window:nth-child(6) { top: 60%; left: 10%; width: 300px; animation-delay: 1s; }
+        .error-window:nth-child(7) { top: 30%; left: 70%; width: 280px; animation-delay: 1.2s; }
+        
+        .error-code {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin: 0;
+            text-shadow: 
+                0 0 10px var(--neon-blue),
+                0 0 20px var(--neon-blue),
+                0 0 30px var(--neon-blue);
+            animation: loading 2s infinite;
+        }
+        
+        .error-message {
+            font-size: 1.2rem;
+            margin: 0.5rem 0;
+            text-shadow: 0 0 5px var(--neon-pink);
+            animation: glitch 1.5s infinite;
+        }
+        
+        .error-description {
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            color: #ccc;
+        }
+        
+        .home-button {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: transparent;
+            color: var(--neon-green);
+            border: 2px solid var(--neon-green);
+            padding: 12px 30px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 
+                0 0 10px var(--neon-green),
+                inset 0 0 10px var(--neon-green);
+            text-decoration: none;
+            font-family: 'Share Tech Mono', monospace;
+            z-index: 2;
+        }
+        
+        .home-button:hover {
+            background: var(--neon-green);
+            color: #000;
+            box-shadow: 
+                0 0 20px var(--neon-green),
+                inset 0 0 20px var(--neon-green);
+        }
+        
+        .home-button::before {
+            content: '>>> ';
+        }
+        
+        .home-button::after {
+            content: ' <<<';
+        }
+        
+        .glitch {
+            position: relative;
+        }
+        
+        .glitch::before, .glitch::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.8;
+        }
+        
+        .glitch::before {
+            color: var(--neon-blue);
+            z-index: -1;
+            animation: glitch-effect 2s infinite;
+        }
+        
+        .glitch::after {
+            color: var(--neon-pink);
+            z-index: -2;
+            animation: glitch-effect 1.8s infinite reverse;
+        }
+        
+        @keyframes loading {
+            0% { opacity: 0.5; }
+            50% { opacity: 1; }
+            100% { opacity: 0.5; }
+        }
+        
+        @keyframes glitch {
+            0% { transform: translate(0); }
+            20% { transform: translate(-5px, 5px); }
+            40% { transform: translate(-5px, -5px); }
+            60% { transform: translate(5px, 5px); }
+            80% { transform: translate(5px, -5px); }
+            100% { transform: translate(0); }
+        }
+        
+        @keyframes glitch-effect {
+            0% { transform: translate(0); }
+            20% { transform: translate(-3px, 3px); }
+            40% { transform: translate(-3px, -3px); }
+            60% { transform: translate(3px, 3px); }
+            80% { transform: translate(3px, -3px); }
+            100% { transform: translate(0); }
+        }
+        
+        @keyframes glitch-window {
+            0% { transform: translate(0); }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(2px, -2px); }
+            60% { transform: translate(-2px, 2px); }
+            80% { transform: translate(2px, -2px); }
+            100% { transform: translate(0); }
+        }
+        
+        /* Адаптация для планшетов (ширина < 768px) */
+        @media (max-width: 768px) {
+            .error-window {
+                width: 200px;
+                padding: 0.8rem;
+            }
+            .error-code {
+                font-size: 1.8rem;
+            }
+            .error-message {
+                font-size: 1rem;
+            }
+            .error-description {
+                font-size: 0.8rem;
+            }
+            .home-button {
+                font-size: 0.9rem;
+                padding: 8px 20px;
+            }
+            /* Перераспределение окон */
+            .error-window:nth-child(1) { top: 5%; left: 5%; }
+            .error-window:nth-child(2) { top: 15%; left: 50%; }
+            .error-window:nth-child(3) { top: 30%; left: 10%; }
+            .error-window:nth-child(4) { top: 40%; left: 55%; }
+            .error-window:nth-child(5) { top: 55%; left: 5%; }
+            .error-window:nth-child(6) { top: 65%; left: 50%; }
+            .error-window:nth-child(7) { top: 80%; left: 10%; }
+        }
+        
+        /* Адаптация для телефонов (ширина < 480px) */
+        @media (max-width: 480px) {
+            .error-window {
+                width: 160px;
+                padding: 0.5rem;
+            }
+            .error-code {
+                font-size: 1.4rem;
+            }
+            .error-message {
+                font-size: 0.9rem;
+            }
+            .error-description {
+                font-size: 0.7rem;
+            }
+            .home-button {
+                font-size: 0.8rem;
+                padding: 6px 15px;
+                top: 90%; /* Перемещаем кнопку вниз, чтобы не перекрывать окна */
+                transform: translateX(-50%);
+            }
+            /* Более компактное расположение окон */
+            .error-window:nth-child(1) { top: 2%; left: 2%; }
+            .error-window:nth-child(2) { top: 12%; left: 40%; }
+            .error-window:nth-child(3) { top: 25%; left: 5%; }
+            .error-window:nth-child(4) { top: 35%; left: 45%; }
+            .error-window:nth-child(5) { top: 48%; left: 2%; }
+            .error-window:nth-child(6) { top: 58%; left: 40%; }
+            .error-window:nth-child(7) { top: 71%; left: 5%; }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="matrix" class="matrix-rain" width="958" height="891"></canvas>
+
+    <div class="error-windows">
+        <div class="error-window">
+            <h1 class="error-code glitch" data-text="0x9C4E">0x9C4E</h1>
+            <h2 class="error-message" data-translate="resource_locked">РЕСУРС ҚҰЛЫПТАЛҒАН</h2>
+            <p class="error-description" data-translate="resource_locked_desc">
+                ҚАТЕ 0x9C4E: РЕСУРС БЛОКТАЛҒАН<br>ҚАУІПСІЗДІК СЕБЕПТЕРІМЕН ҚҰЛЫПТАЛҒАН.
+            </p>
+        </div>
+        <div class="error-window">
+            <h1 class="error-code glitch" data-text="0x3A7F">0x3A7F</h1>
+            <h2 class="error-message" data-translate="server_overloaded">СЕРВЕР ШАМАДАН ТЫС ЖҮКТЕЛГЕН</h2>
+            <p class="error-description" data-translate="server_overloaded_desc">
+                ҚАТЕ 0x3A7F: СЕРВЕР ЖҮКТЕЛУІ<br>СҰРАНЫСТАРДЫҢ КӨПТІГІНЕН ЖЕТІСПЕЙДІ.
+            </p>
+        </div>
+        <div class="error-window">
+            <h1 class="error-code glitch" data-text="0x5E2B">0x5E2B</h1>
+            <h2 class="error-message" data-translate="protocol_violation">ПРОТОКОЛ БҰЗЫЛҒАН</h2>
+            <p class="error-description" data-translate="protocol_violation_desc">
+                ҚАТЕ 0x5E2B: ПРОТОКОЛ БҰЗЫЛҒАН<br>СҰРАНЫС ПРОТОКОЛЫ ДҰРЫС ЕМЕС.
+            </p>
+        </div>
+        <div class="error-window">
+            <h1 class="error-code glitch" data-text="0x6D4C">0x6D4C</h1>
+            <h2 class="error-message" data-translate="data_corruption">ДЕРЕКТЕР БҰЗЫЛҒАН</h2>
+            <p class="error-description" data-translate="data_corruption_desc">
+                ҚАТЕ 0x6D4C: ДЕРЕКТЕР БҰЗЫЛҒАН<br>СҰРАЛҒАН ДЕРЕКТЕР БҰЗЫЛҒАН НЕМЕСЕ ЖОҚ.
+            </p>
+        </div>
+        <div class="error-window">
+            <h1 class="error-code glitch" data-text="0x8F5D">0x8F5D</h1>
+            <h2 class="error-message" data-translate="network_disconnected">ЖЕЛІ АЖЫРАТЫЛҒАН</h2>
+            <p class="error-description" data-translate="network_disconnected_desc">
+                ҚАТЕ 0x8F5D: ЖЕЛІ АЖЫРАТЫЛҒАН<br>СЕРВЕРМЕН БАЙЛАНЫС ҮЗІЛДІ.
+            </p>
+        </div>
+        <div class="error-window">
+            <h1 class="error-code glitch" data-text="0x9G6E">0x9G6E</h1>
+            <h2 class="error-message" data-translate="memory_exhausted">ЖАДЫ ТАУСЫЛҒАН</h2>
+            <p class="error-description" data-translate="memory_exhausted_desc">
+                ҚАТЕ 0x9G6E: ЖАДЫ ТАУСЫЛҒАН<br>ЖҮЙЕ ЖАДЫ ТОЛЫҒЫМЕН ПАЙДАЛАНЫЛДЫ.
+            </p>
+        </div>
+        <div class="error-window">
+            <h1 class="error-code glitch" data-text="0x0H7F">0x0H7F</h1>
+            <h2 class="error-message" data-translate="system_infected">ЖҮЙЕ ЗАҚЫМДАЛҒАН</h2>
+            <p class="error-description" data-translate="system_infected_desc">
+                ҚАТЕ 0x0H7F: ЖҮЙЕ ЗАҚЫМДАЛҒАН<br>ЗИЯНДЫ КОДПЕН ЗАҚЫМДАЛҒАН.
+            </p>
+        </div>
+    </div>
+
+    <a href="/" class="home-button" data-translate="go_home">БАСТЫ ЖҮЙЕГЕ ОРАЛУ</a>
+
+    <script>
+        const canvas = document.getElementById('matrix');
+        const ctx = canvas.getContext('2d');
+        
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        
+        const katakana = 'アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズブヅプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴッン';
+        const latin = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        const nums = '0123456789';
+        const symbols = '!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~';
+        
+        const alphabet = katakana + latin + nums + symbols;
+        
+        let fontSize = 16;
+        if (window.innerWidth <= 480) {
+            fontSize = 12; // Уменьшаем размер символов матрицы для телефонов
+        }
+        const columns = canvas.width / fontSize;
+        
+        const rainDrops = [];
+        
+        for (let x = 0; x < columns; x++) {
+            rainDrops[x] = 1;
+        }
+        
+        const draw = () => {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            ctx.fillStyle = '#00ff00';
+            ctx.font = fontSize + 'px monospace';
+            
+            for (let i = 0; i < rainDrops.length; i++) {
+                const text = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
+                ctx.fillText(text, i * fontSize, rainDrops[i] * fontSize);
+                
+                if (rainDrops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                    rainDrops[i] = 0;
+                }
+                rainDrops[i]++;
+            }
+        };
+        
+        setInterval(draw, 35);
+    </script>
+
+
+</body></html>

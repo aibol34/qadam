@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>О проекте — QadamDapp</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+
+  <!-- Подключаем header -->
+  <div id="header-placeholder"></div>
+
+  <!-- Основной контент -->
+  <main class="content">
+    <h1>О проекте QadamDap</h1>
+    <p>
+      QadamDap — это интерактивная платформа карьерного развития, предназначенная для студентов и молодых специалистов. 
+      Мы объединяем технологии искусственного интеллекта, аналитику и рыночные данные, чтобы помочь каждому пользователю найти свой путь.
+    </p>
+    <p>
+      Наша цель — сделать карьерное планирование доступным, персонализированным и эффективным.
+    </p>
+  </main>
+
+
+
+
+
+  
+  <!-- Подключаем footer -->
+  <div id="footer-placeholder"></div>
+
+  <!-- JavaScript для загрузки header и footer -->
+  <script>
+    fetch('header.html')
+      .then(res => res.text())
+      .then(data => document.getElementById('header-placeholder').innerHTML = data);
+
+    fetch('footer.html')
+      .then(res => res.text())
+      .then(data => document.getElementById('footer-placeholder').innerHTML = data);
+  </script>
+
+</body>
+</html>
