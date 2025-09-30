@@ -1,0 +1,71 @@
+/* Header */
+.dark-header {
+  background: #111124;
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.fork-section {
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 230px;
+  background: #111124;
+  padding: 50px 0 0px 0;
+}
+
+.center-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+  text-align: center;
+  position: relative;
+  background: none; /* если нужен прозрачный фон */
+  box-sizing: border-box;
+}
+
+.dark-header {
+  position: relative;
+  z-index: 1000;
+  transition: box-shadow 0.4s, background 0.2s;
+}
+
+.dark-header.sticky {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  box-shadow: 0 8px 12px rgba(0,0,0,0.13);
+
+}
+
+.logo {
+  font-size: 1.5rem;
+  color: #03a9f4;
+  font-weight: bold;
+}
+
+.menu a {
+  color: #e0e0e0;
+  margin-left: 1.5rem;
+  text-decoration: none;
+  font-size: 1rem;
+}
+
+.menu a:hover {
+  color: #03a9f4;
+}
+
+/* Content */
+.content {
+  padding: 2rem;
+  text-align: center;
+}
+
+

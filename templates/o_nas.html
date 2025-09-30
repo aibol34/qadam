@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Бағдарламалық қамтамасыз ету және ақпараттық қауіпсіздік жүйелері</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" href="/static/images/header/icon_site_logo.svg" type="image/x-icon">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/style.css">   
+
+
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: none;
+            color: #ffffff;
+            margin: 0;
+            overflow-x: hidden;
+            position: relative;
+        }
+        #particles-js {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+        .hero-section {
+            background: linear-gradient(135deg, #7ce1e4d0 0%, #3b83f6bd 50%, #d400f9a1 100%);
+            background-size: 200% 200%;
+            animation: gradientShift 15s ease infinite;
+            position: relative;
+            min-height: 700px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        .hero-section::before {
+            content: "";
+            background-image: url("/static/images/stud/g6.JPG");
+            background-size: cover;
+            background-position: center;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 100%;
+            height: 100%;
+            transform: translate(-50%, -50%) rotate(-0deg);
+            font-size: 6rem;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.1);
+            text-transform: uppercase;
+            white-space: nowrap;
+            z-index: -1;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 1.5s ease-out 0.5s forwards;
+            text-shadow: 0 0 10px rgba(0, 247, 255, 0.7);
+        }
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        @keyframes fadeInUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .section-title {
+            font-family: 'Orbitron', sans-serif;
+            position: relative;
+            display: inline-block;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(to right, #00f7ff, #d500f9);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 15px rgba(0, 247, 255, 0.5);
+        }
+        .club-card {
+            background: rgba(10, 10, 10, 0.85);
+            border: 1px solid rgba(0, 247, 255, 0.3);
+            backdrop-filter: blur(10px);
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            border-radius: 1rem;
+        }
+        .document-card {
+        width: 550px;
+        max-width: none;
+}
+
+
+        .club-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 247, 255, 0.3), transparent);
+            transition: 0.6s;
+        }
+        .club-card:hover::before {
+            left: 100%;
+        }
+        .club-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 0 25px rgba(0, 247, 255, 0.6), 0 0 50px rgba(213, 0, 249, 0.4);
+        }
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 1s ease-out forwards;
+        }
+        .fade-in:nth-child(2) { animation-delay: 0.3s; }
+        .fade-in:nth-child(3) { animation-delay: 0.6s; }
+        .fade-in:nth-child(4) { animation-delay: 0.9s; }
+        .list-item {
+            position: relative;
+            padding-left: 1.5rem;
+        }
+
+        .list-item::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: #00f7ff;
+            font-family: 'Orbitron', sans-serif;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+        main {
+            background: transparent;
+            position: relative;
+            z-index: 1;
+        }
+        h1, h2, h3 {
+            font-family: 'Orbitron', sans-serif;
+        }
+        .section-title {
+            font-family: 'Orbitron', sans-serif;
+            position: relative;
+            display: inline-block;
+            width: 100%;
+
+            margin-bottom: 2rem;
+            background: linear-gradient(to right, #00f7ff, #d500f9);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 15px rgba(0, 247, 255, 0.5);
+        }
+
+        .member-card {
+            background: rgba(10, 10, 10, 0.85);
+            border: 1px solid rgba(0, 247, 255, 0.3);
+            backdrop-filter: blur(10px);
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            text-align: center;
+        }
+        .member-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 247, 255, 0.3), transparent);
+            transition: 0.6s;
+        }
+        .member-card:hover::before {
+            left: 100%;
+        }
+        .member-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 0 25px rgba(0, 247, 255, 0.6), 0 0 50px rgba(213, 0, 249, 0.4);
+        }
+        .member-photo {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #00f7ff;
+            margin: 0 auto 1rem;
+            box-shadow: 0 0 15px rgba(0, 247, 255, 0.5);
+        }
+        .main-member {
+            max-width: 400px;
+            margin: 0 auto 2rem;
+            padding: 2rem;
+        }
+        .main-member .member-photo {
+            width: 200px;
+            height: 200px;
+        }
+        .main-member .member-name {
+            font-size: 2rem;
+        }
+        .main-member .member-role {
+            font-size: 1.2rem;
+        }
+        .member-name {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            color: #00f7ff;
+            text-shadow: 0 0 10px rgba(0, 247, 255, 0.5);
+            margin-bottom: 0.5rem;
+        }
+        .member-role {
+            font-size: 1rem;
+            color: #d500f9;
+            margin-bottom: 1rem;
+        }
+        .member-description {
+            font-size: 0.9rem;
+            color: #d1d5db;
+            line-height: 1.5;
+        }
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 1s ease-out forwards;
+        }
+        .fade-in:nth-child(2) { animation-delay: 0.3s; }
+        .fade-in:nth-child(3) { animation-delay: 0.6s; }
+        .fade-in:nth-child(4) { animation-delay: 0.9s; }
+        @keyframes fadeInUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+        main {
+            background: transparent;
+            position: relative;
+            z-index: 1;
+        }
+        .photo-slider {
+        width: 100%;
+        overflow: hidden;
+        position: relative;
+        background-color: #f4f4f4;
+        }
+
+        .carousel {
+            max-width: 1800px;
+            margin: 20px auto;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .carousel-container {
+            display: flex;
+            transition: transform 0.5s ease;
+        }
+
+        .carousel-item {
+            flex: 0 0 calc(100% / 3); /* Показываем 3 фото одновременно */
+            padding: 0 5px;
+            box-sizing: border-box;
+            height: 300px; /* Фиксированная высота */
+        }
+
+        .carousel-item img {
+            width: 100%;
+            height: 100%;
+            border-radius: 8px;
+            display: apply;
+
+        }
+
+        .dark-header img {
+            height: 40px;
+            text-decoration: none;
+        }
+
+        .carousel-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            padding: 12px;
+            cursor: pointer;
+            font-size: 18px;
+            z-index: 10;
+            border-radius: 50%;
+        }
+
+        .carousel-btn:hover {
+            background: rgba(0, 0, 0, 0.8);
+        }
+
+        #prevBtn {
+            left: 10px;
+        }
+
+        #nextBtn {
+            right: 10px;
+        }
+    </style>
+</head>
+<script>
+    fetch('/static/html/header.html')
+    .then(res => res.text())
+    .then(data => document.getElementById('header-placeholder').innerHTML = data);
+</script>
+
+<body>
+    <div id="particles-js"></div>
+    <div id="header-placeholder"></div>
+    <main class="container mx-auto py-16 px-4">
+        <!-- Club Committee Section -->
+        <section id="club-committee" class="mb-16">
+            <h2 class="section-title text-4xl font-bold text-center" data-translate="qurlym" >Состав</h2>
+            <div class="main-member member-card fade-in">
+                <img src="/static/logo/o_nas/img.JPG" alt="Кондакбаева Айдана" class="member-photo">
+                <h3 class="member-name">Ердос Серикович
+                </h3>
+                <p class="member-role" data-translate="zav_1">Руководитель</p>
+
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="member-card fade-in">
+                    <img src="/static/logo/o_nas/img1.jpg" alt="Смагулов Султан" class="member-photo">
+                    <h3 class="member-name">Келіс Айбол</h3>
+                    <p class="member-role">Fullstack-разработчик</p>
+                </div>
+
+
+                <div class="member-card fade-in">
+                    <img src="/static/logo/o_nas/img2.jpg" alt="Смагулов Султан" class="member-photo">
+                    <h3 class="member-name">Алмасұлы Ернар</h3>
+                    <p class="member-role">Team lead</p>
+                </div>
+
+
+                <div class="member-card fade-in">
+                    <img src="/static/logo/o_nas/img3.jpg" alt="Смагулов Султан" class="member-photo">
+                    <h3 class="member-name">Мирас Қайратұлы</h3>
+                    <p class="member-role">Backend-разработчик</p>
+                </div>
+
+
+
+
+                <div class="member-card fade-in">
+                    <img src="/static/logo/o_nas/img4.jpg" alt="Смагулов Султан" class="member-photo">
+                    <h3 class="member-name">Демидов Александр</h3>
+                    <p class="member-role">Frontend-разработчик</p>
+                </div>
+
+
+               
+            </div>
+        </section>
+    </main>
+
+
+    <script>
+        // Particles.js configuration
+        particlesJS('particles-js', {
+            particles: {
+                number: { value: 150, density: { enable: true, value_area: 1000 } },
+                color: { value: ['#00f7ff', '#d500f9'] },
+                shape: { type: 'circle' },
+                opacity: { value: 0.6, random: true },
+                size: { value: 4, random: true },
+                line_linked: {
+                    enable: true,
+                    distance: 150,
+                    color: '#00f7ff',
+                    opacity: 0.4,
+                    width: 1
+                },
+                move: {
+                    enable: true,
+                    speed: 2,
+                    direction: 'none',
+                    random: true,
+                    straight: false,
+                    out_mode: 'out',
+                    bounce: false
+                }
+            },
+            interactivity: {
+                detect_on: 'canvas',
+                events: {
+                    onhover: { enable: true, mode: 'grab' },
+                    onclick: { enable: true, mode: 'push' },
+                    resize: true
+                },
+                modes: {
+                    grab: { distance: 200, line_linked: { opacity: 0.7 } },
+                    push: { particles_nb: 4 }
+                }
+            },
+            retina_detect: true
+        });
+
+        // Dynamic date and time
+        function updateDateTime() {
+            const now = new Date();
+            document.getElementById('current-date').textContent = now.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
+            document.getElementById('current-time').textContent = now.toLocaleTimeString('ru-RU');
+        }
+        updateDateTime();
+        setInterval(updateDateTime, 1000);
+    </script> 
