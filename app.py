@@ -1,6 +1,5 @@
-from flask import Flask, request, render_template, Response
+from flask import Flask, request, render_template, Response, jsonify
 from dotenv import load_dotenv
-from flask import jsonify
 import openai
 import os
 import json
@@ -8,11 +7,10 @@ import requests
 from collections import defaultdict
 import statistics
 
-
-
-
+# Загружаем .env
 load_dotenv()
 
+# Настраиваем OpenAI клиента
 client = openai.OpenAI(
     api_key=os.getenv("OPENAI_API_KEY"),
     organization=os.getenv("OPENAI_ORG_ID") or None
@@ -20,17 +18,21 @@ client = openai.OpenAI(
 
 app = Flask(__name__, template_folder='templates')
 
+
 @app.route('/')
 def index():
     return render_template('index.html')
+
 
 @app.route('/career')
 def career():
     return render_template('career.html')
 
+
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('404.html'), 404
+
 
 @app.route('/career/predict', methods=['POST'])
 def predict():
@@ -105,7 +107,6 @@ def relevance():
                 if salary and salary.get("from") and salary.get("currency") == "KZT":
                     salaries.append(salary["from"])
 
-                # Анализ требуемых навыков
                 if v.get("key_skills"):
                     for skill in v["key_skills"]:
                         skills_counter[skill["name"].lower()] += 1
@@ -128,7 +129,7 @@ def relevance():
             if current_count > prev_month_count:
                 trend = f"↑ {round((current_count - prev_month_count) / prev_month_count * 100)}%"
             elif current_count < prev_month_count:
-                trend = f"↓ {round((prev_month_count - current_count) / prev_month_count * 100)}%"
+                trend = f"↓ {round((prev_month_count - current_count) / current_count * 100)}%"
             else:
                 trend = "→ 0%"
 
@@ -152,9 +153,11 @@ def relevance():
 def ai_tree():
     return render_template("ai-tree.html")
 
+
 @app.route("/about")
 def about():
     return render_template("o_nas.html")
+
 
 @app.route("/ai-tree/api/node", methods=["POST"])
 def generate_node():
@@ -173,7 +176,7 @@ def generate_node():
 2. Вариант 2
 """
 
-    response = openai.chat.completions.create(
+    response = client.chat.completions.create(
         model="gpt-4",
         messages=[{"role": "user", "content": prompt}],
         temperature=0.8,
@@ -185,6 +188,7 @@ def generate_node():
     options = [line.replace("1.", "").replace("2.", "").strip() for line in lines[1:3]]
 
     return jsonify({"question": question, "options": options})
+
 
 @app.route("/ai-tree/api/result", methods=["POST"])
 def generate_result():
@@ -200,7 +204,7 @@ def generate_result():
 Затем обязательно дай объяснение в 2-4 предложениях, почему ты выбрал именно её.
 """
 
-    response = openai.chat.completions.create(
+    response = client.chat.completions.create(
         model="gpt-4",
         messages=[{"role": "user", "content": prompt}],
         temperature=0.7,
@@ -208,6 +212,7 @@ def generate_result():
 
     result = response.choices[0].message.content.strip()
     return jsonify({"profession": result})
+
 
 @app.route("/ai-tree/api/vacancies", methods=["POST"])
 def get_vacancies():
@@ -237,7 +242,6 @@ def get_vacancies():
             "salary": salary_str
         })
     return jsonify({"vacancies": vacancies})
-
 
 
 @app.errorhandler(404)
