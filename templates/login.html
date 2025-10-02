@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}Вход — QadamDapp{% endblock %}
+
+{% block content %}
+<section class="auth-section">
+  <h2>Вход</h2>
+  <form method="POST" class="auth-form">
+    <input type="text" name="username" placeholder="Логин" required>
+    <input type="password" name="password" placeholder="Пароль" required>
+    <button type="submit" class="btn-auth">Войти</button>
+  </form>
+
+  <div class="auth-link">
+    <a href="/forgot">Забыли пароль?</a>
+  </div>
+  <div class="auth-link">
+    Нет аккаунта? <a href="/register">Зарегистрироваться</a>
+  </div>
+</section>
+{% endblock %}

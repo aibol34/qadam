@@ -1,0 +1,35 @@
+.dashboard-container {
+  max-width: 900px;
+  margin: 80px auto;
+  padding: 40px;
+  background: #111124;
+  border-radius: 16px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.6);
+  text-align: center;
+  color: #fff;
+}
+
+.dashboard-cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-top: 30px;
+  justify-content: center;
+}
+
+.dash-card {
+  flex: 1 1 200px;
+  padding: 20px;
+  border-radius: 12px;
+  background: #28204a;
+  color: #fff;
+  text-decoration: none;
+  font-size: 1.2rem;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+  transition: transform 0.3s, background 0.3s;
+}
+
+.dash-card:hover {
+  transform: translateY(-5px);
+  background: #3a2a6a;
+}

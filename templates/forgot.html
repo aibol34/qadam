@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="auth-section">
+  <h2>Восстановление пароля</h2>
+  <form method="POST" class="auth-form">
+    <input type="email" name="email" placeholder="Введите вашу почту" required>
+    <button type="submit" class="button">Отправить код</button>
+  </form>
+  <p class="auth-link"><a href="{{ url_for('auth.login') }}">Назад ко входу</a></p>
+</section>
+{% endblock %}

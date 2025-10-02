@@ -1,10 +1,14 @@
+/* =========================
+   Глобальные стили
+========================= */
 html, body {
   margin: 0;
   padding: 0;
   height: 100%;
   font-family: Arial, sans-serif;
+  background: #111124;
   scroll-behavior: smooth;
-  background: #111124; /* вместо black */
+  color: #fff;
 }
 
 canvas {
@@ -15,6 +19,9 @@ canvas {
   z-index: 0;
 }
 
+/* =========================
+   Intro + центрированный текст
+========================= */
 #intro {
   position: relative;
   height: 100vh;
@@ -32,31 +39,27 @@ canvas {
   display: flex;
   align-items: center;
   white-space: nowrap;
-  overflow: hidden;
   border-right: 3px solid rgba(255, 255, 255, 0.8);
   animation: blink 1s step-end infinite;
 
-  /* Градиентная заливка текста */
+  /* Градиент + прозрачный текст */
   background: linear-gradient(to bottom, #ff03ee, #00047d);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-
-  /* Светящееся свечение */
-
 }
 
 @keyframes blink {
-  50% {
-    border-right-color: transparent;
-  }
+  50% { border-right-color: transparent; }
 }
 
+/* =========================
+   Навигация
+========================= */
 #navbar {
   position: fixed;
   top: 0;
   width: 100%;
   background: #111124;
-  border-bottom: white;
   color: white;
   padding: 10px 0;
   display: none;
@@ -64,9 +67,7 @@ canvas {
   text-align: center;
 }
 
-#navbar.visible {
-  display: block;
-}
+#navbar.visible { display: block; }
 
 #navbar ul {
   list-style: none;
@@ -83,23 +84,172 @@ canvas {
   font-size: 18px;
 }
 
-#welcome {
-  padding: 100px 20px;
+/* =========================
+   Первый шаг (ракета)
+========================= */
+.first-step-section {
   background: #111124;
-  color: #fff;
-  min-height: 100vh;
-  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 70px 0;
 }
 
+.first-step-container {
+  display: flex;
+  gap: 60px;
+  align-items: center;
+  max-width: 1000px;
+  width: 100%;
+  justify-content: center;
+}
 
+.first-step-text {
+  max-width: 500px;
+  color: #fff;
+}
 
-/*
-===========================
-*/
+.first-step-text h2 {
+  font-size: 2.8rem;
+  font-weight: 700;
+  margin-bottom: 16px;
+  line-height: 1.2;
+}
 
-.benefits-section {
+.first-step-text p {
+  font-size: 1.5rem;
+  color: #e0e0e0;
+  line-height: 1.5;
+}
+
+.first-step-img img {
+  width: 370px;
+  height: auto;
+  border-radius: 18px;
   background: #111124;
-  color: #ffffff;
+  animation: rocket-fly 2.5s ease-in-out infinite;
+}
+
+@keyframes rocket-fly {
+  0%, 100% { transform: translateY(0) rotate(-6deg) scale(1); }
+  20%, 80% { transform: translateY(-10px) rotate(-2deg) scale(1.03); }
+  50%      { transform: translateY(-20px) rotate(3deg) scale(1.07); }
+}
+
+@media (max-width: 780px) {
+  .first-step-container { flex-direction: column; gap: 28px; }
+  .first-step-img img { width: 200px; }
+  .first-step-text { text-align: center; max-width: 90vw; }
+}
+
+/* =========================
+   Развилка (fork-section)
+========================= */
+.center-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  max-width: 600px;
+  margin: 0 auto;
+  position: relative;
+}
+
+.main-text {
+  font-size: 1.8rem;
+  margin-bottom: 34px;
+  font-weight: 500;
+}
+
+.start-btn {
+  background: #6600cc;
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  font-size: 1.5rem;
+  padding: 18px 60px;
+  cursor: pointer;
+  box-shadow: 0 6px 18px #24005a55;
+  font-weight: bold;
+  transition: all 0.3s;
+}
+
+.start-btn:hover {
+  background: #7a1fff;
+  transform: translateY(-3px) scale(1.04);
+}
+
+.branch-svg {
+  width: 350px;
+  height: 100px;
+  position: absolute;
+  left: 50%;
+  top: 95px;
+  transform: translateX(-50%);
+  z-index: 1;
+  opacity: 0;
+  transition: opacity .4s;
+  pointer-events: none;
+}
+
+.branch-svg.visible { opacity: 1; }
+
+.branch-path {
+  stroke: #fff;
+  stroke-width: 2.5;
+  fill: none;
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+  animation: dashAnim 1.1s cubic-bezier(.77,.12,.36,1.05) forwards;
+}
+
+@keyframes dashAnim { to { stroke-dashoffset: 0; } }
+
+.choice-row {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  margin-top: 70px;
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.7s, transform 0.7s;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.choice-row.visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.choice-btn {
+  background: #4c07b6;
+  color: #fff;
+  border-radius: 12px;
+  font-size: 1.15rem;
+  padding: 20px 38px;
+  cursor: pointer;
+  box-shadow: 0 5px 18px #24005a66;
+  transition: all 0.25s;
+  min-width: 180px;
+}
+
+.choice-btn:hover {
+  background: #7a1fff;
+  transform: translateY(-2px) scale(1.03);
+}
+
+@media (max-width: 600px) {
+  .branch-svg { width: 220px; }
+  .choice-row { flex-direction: column; gap: 22px; margin-top: 82px; }
+  .choice-btn { padding: 16px 10px; min-width: 0; }
+}
+
+/* =========================
+   Преимущества
+========================= */
+.benefits-section {
   padding: 60px 30px;
   text-align: center;
   font-family: 'Segoe UI', sans-serif;
@@ -111,19 +261,10 @@ canvas {
   color: #48ff97;
 }
 
-.benefits-subtitle {
-  font-size: 17px;
-  max-width: 800px;
-  margin: 0 auto 40px auto;
-  color: #b4b4b4;
-}
-
 .benefits-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 30px;
-  justify-items: center;
-  align-items: stretch;
   max-width: 1200px;
   margin: 0 auto;
 }
@@ -132,51 +273,30 @@ canvas {
   background: #111124;
   border-radius: 16px;
   padding: 25px 20px;
-  min-width: 220px;
-  max-width: 320px;
-  width: 100%;
   box-shadow: 0 0 18px #00000033;
-  transition: transform 0.3s ease;
-  box-sizing: border-box;
+  transition: transform 0.3s;
 }
 
-.benefit-card:hover {
-  transform: translateY(-6px);
-}
-
-.benefit-icon {
-  font-size: 40px;
-  margin-bottom: 15px;
-}
+.benefit-card:hover { transform: translateY(-6px); }
 
 .benefit-title {
   font-size: 18px;
   font-weight: 600;
   color: #60a3d9;
-  margin-bottom: 10px;
+  margin: 15px 0 10px;
 }
 
-.benefit-desc {
-  font-size: 15px;
-  color: #dcdcdc;
-}
+.benefit-desc { color: #dcdcdc; font-size: 15px; }
 
-
-
-.benefit-icons{
+.benefit-icons {
   height: 40px;
   filter: brightness(0) invert(1);
 }
 
-
-/*
-Статистика
-*/
-
-
+/* =========================
+   Статистика
+========================= */
 .stats-section {
-  background: #111124;
-  color: #ffffff;
   padding: 60px 30px;
   text-align: center;
   font-family: 'Segoe UI', sans-serif;
@@ -201,12 +321,10 @@ canvas {
   padding: 30px 20px;
   width: 280px;
   box-shadow: 0 0 20px #00000033;
-  transition: transform 0.3s ease;
+  transition: transform 0.3s;
 }
 
-.stat-card:hover {
-  transform: scale(1.05);
-}
+.stat-card:hover { transform: scale(1.05); }
 
 .stat-number {
   font-size: 36px;
@@ -215,302 +333,49 @@ canvas {
   margin-bottom: 12px;
 }
 
-.stat-label {
-  font-size: 16px;
-  color: #dcdcdc;
-}
+.stat-label { color: #dcdcdc; font-size: 16px; }
 
-.first-step-section {
-  width: 100vw;
-  background: #111124;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 70px 0 0px 0;
-}
-
-.first-step-container {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  max-width: 1000px;
-  width: 100%;
-  justify-content: center;
-  gap: 60px;
-}
-
-.first-step-text {
-  max-width: 500px;
-  max-height: 340px;
-  color: #fff;
-  text-align: left;
-}
-
-.first-step-text h2 {
-  font-size: 2.8rem;
-  font-weight: 700;
-  margin: 0 0 16px 0;
-  line-height: 1.2;
-}
-
-.first-step-text p {
-  font-size: 1.5rem;
-  line-height: 1.5;
-  color: #e0e0e0;
-  margin: 0;
-}
-
-
-
-.first-step-img img {
-  width: 370px;
-  height: auto;
-  border-radius: 18px;
-  /* box-shadow: 0 4px 18px #00000024; */
-  background: #111124;
-  transform: rotate(30deg);
-
-
-  animation: rocket-fly 2.5s ease-in-out infinite;
-}
-
-/* Ключевые кадры анимации */
-@keyframes rocket-fly {
-  0% {
-    transform: translateY(0) rotate(-6deg) scale(1);
-  }
-  20% {
-    transform: translateY(-10px) rotate(-2deg) scale(1.03);
-  }
-  50% {
-    transform: translateY(-20px) rotate(3deg) scale(1.07);
-  }
-  80% {
-    transform: translateY(-10px) rotate(-2deg) scale(1.03);
-  }
-  100% {
-    transform: translateY(0) rotate(-6deg) scale(1);
-  }
-}
-
-
-@media (max-width: 780px) {
-  .first-step-container {
-    flex-direction: column;
-    gap: 28px;
-  }
-  .first-step-img img {
-    width: 200px;
-  }
-  .first-step-text {
-    text-align: center;
-    max-width: 90vw;
-  }
-}
-
-
-.center-area {
-  display: flex; 
-  flex-direction: column; 
-  align-items: center;
-  width: 100%;
-  max-width: 600px;
+/* =========================
+   Партнёры
+========================= */
+.partners-section {
   text-align: center;
-  position: relative;
-}
-.main-text {
-  color: #fff;
-  font-size: 1.8rem;
-  margin-bottom: 34px;
-  font-weight: 500;
+  padding: 60px 30px;
+  font-family: 'Segoe UI', sans-serif;
 }
 
-.start-btn {
-  background: #6600cc;
-  color: #fff;
-  border: none;
-  border-radius: 12px;
-  font-size: 1.5rem;
-  padding: 18px 60px;
-  cursor: pointer;
-  box-shadow: 0 6px 18px #24005a55;
-  font-weight: bold;
-  position: relative;
-  z-index: 2;
-  margin-bottom: 0;
-}
-.start-btn:hover {
-  background: #7a1fff;
-  transform: translateY(-3px) scale(1.04);
-}
-
-.branch-svg {
-  width: 350px;
-  height: 100px;
-  position: absolute;
-  left: 50%;
-  top: 95px;
-  transform: translateX(-50%);
-  pointer-events: none;
-  z-index: 1;
-  opacity: 0;
-  transition: opacity .4s;
-}
-.branch-svg.visible {
-  opacity: 1;
-}
-.branch-path {
-  stroke: #fff;
-  stroke-width: 2.5;
-  fill: none;
-  stroke-dasharray: 1000;
-  stroke-dashoffset: 1000;
-  animation: dashAnim 1.1s cubic-bezier(.77,.12,.36,1.05) forwards;
-}
-.branch-svg.visible .branch-path {
-  animation-delay: .1s;
-  animation-play-state: running;
-}
-@keyframes dashAnim {
-  to { stroke-dashoffset: 0; }
-}
-
-.choice-row {
-  display: flex;
-  justify-content: center;
-  gap: 40px;
-  margin-top: 70px;
-  opacity: 0;
-  transform: translateY(30px);
-  transition: opacity 0.7s, transform 0.7s;
-  pointer-events: none;
-  position: relative;
-  z-index: 2;
-}
-.choice-row.visible {
-  opacity: 1;
-  transform: translateY(0);
-  pointer-events: auto;
-}
-.choice-btn {
-  background: #4c07b6;
-  color: #fff;
-  border: none;
-  border-radius: 12px;
-  font-size: 1.15rem;
-  padding: 20px 38px;
-  cursor: pointer;
-  box-shadow: 0 5px 18px #24005a66;
-  font-weight: 500;
-  transition: background 0.25s, transform 0.2s;
-  min-width: 180px;
-}
-.choice-btn:hover {
-  background: #7a1fff;
-  transform: translateY(-2px) scale(1.03);
-}
-
-@media (max-width: 600px) {
-  .center-area { max-width: 98vw; }
-  .branch-svg { width: 220px; }
-  .choice-row { flex-direction: column; gap: 22px; margin-top: 82px; }
-  .choice-btn { padding: 16px 10px; min-width: 0; }
-}
-
-/*  */
-
-h1 {
-  font-size: 24px;
+.partners-section h2 {
+  font-size: 32px;
   margin-bottom: 40px;
+  color: #48ff97;
 }
 
-.button {
-  background: #6600cc;
-  color: white;
-  padding: 16px 40px;
-  border: none;
-  border-radius: 10px;
-  font-size: 18px;
-  cursor: pointer;
-  box-shadow: 0 5px 10px #24005a;
-  transition: background 0.3s ease;
-}
-
-.button:hover {
-  background: #7a1fff;
-}
-
-.child-buttons {
+.partners {
   display: flex;
-  justify-content: center;
-  margin-top: 60px;
-  gap: 60px;
-  opacity: 0;
-  transform: translateY(-20px);
-  transition: opacity 0.8s ease, transform 0.8s ease;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
 }
 
-.child-buttons.visible {
-  opacity: 1;
-  transform: translateY(0);
+.partners-track {
+  display: flex;
+  gap: 50px;
 }
 
-.line {
-  position: absolute;
-  top: 220px;
-  left: 50%;
-  width: 2px;
-  height: 60px;
-  background: #aaa;
-  transform: translateX(-1px);
+.partner-card img {
+  width: 150px;
+  height: 100px;
+  object-fit: contain;
+  filter: brightness(0) invert(1);
+  transition: transform 0.3s;
 }
 
-.curve-left, .curve-right {
-  position: absolute;
-  width: 100px;
-  height: 60px;
-  border-bottom: 1px solid #aaa;
-  border-left: 1px solid #aaa;
-  border-radius: 0 0 0 80px;
-}
+.partner-card img:hover { transform: scale(1.1); }
 
-.curve-left {
-  top: 230px;
-  left: calc(50% - 120px);
-  transform: rotate(-30deg);
-}
-
-.curve-right {
-  top: 230px;
-  left: calc(50% + 20px);
-  transform: rotate(30deg);
-}
-
-
-@media (max-width: 800px) {
-  .benefits-grid {
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-  }
-}
-@media (max-width: 520px) {
-  .benefits-grid {
-    grid-template-columns: 1fr;
-    gap: 15px;
-  }
-  .benefit-card {
-    padding: 16px 8px;
-    min-width: unset;
-    max-width: unset;
-  }
-}
-
-
-
-
-
+/* =========================
+   Футер
+========================= */
 .footer-section {
-  flex: 1;
   min-width: 250px;
   margin-bottom: 2rem;
 }
@@ -527,7 +392,6 @@ h1 {
   font-size: 1rem;
   display: flex;
   align-items: center;
-  margin-bottom: 0.4rem;
 }
 
 .footer-icon {
@@ -535,74 +399,3 @@ h1 {
   margin-right: 8px;
   filter: grayscale(1) brightness(0) invert(1);
 }
-
-
-
-
-
-/* ===== Блок партнеров ===== */
-.partners {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    border-radius: 24px;
-    padding: 32px 24px;
-    width: 100%;
-    max-width: 800px;
-    margin: 0 auto;
-}
-
-.partners-section {
-  text-align: center;
-  padding: 60px 30px;
-  color: #fff; /* ← теперь заголовок и текст будут белыми */
-  font-family: 'Segoe UI', sans-serif;
-}
-.partners-section h2 {
-  font-size: 32px;
-  margin-bottom: 40px;
-  color: #48ff97; /* зелёный акцент, как в "Статистика" */
-}
-
-
-.partners-slider {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-}
-
-.partners-track {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 50px;
-    margin-bottom: 20px;
-}
-
-.partners-track.bottom {
-    margin-bottom: 0;
-}
-
-.partner-card {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 150px;
-    height: 100px;
-    background: none;
-}
-
-.partner-card img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    filter: brightness(0) invert(1);
-    transition: transform 0.3s;
-}
-
-.partner-card img:hover {
-    transform: scale(1.1);
-}
-

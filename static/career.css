@@ -1,0 +1,378 @@
+:root {
+  --primary: #00f7ff;
+  --secondary: #ff00f7;
+  --accent: #7b2dff;
+  --bg-dark: #0a0a1a;
+  --bg-darker: #050510;
+  --card-bg: rgba(20, 20, 40, 0.7);
+  --text: #e0e0ff;
+  --text-dim: #a0a0c0;
+  --success: #00ffaa;
+  --warning: #ffaa00;
+  --danger: #ff3d3d;
+}
+
+/* === БАЗОВЫЙ ФОН === */
+body {
+  font-family: 'Exo 2', sans-serif;
+  background: var(--bg-dark);
+  color: var(--text);
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  background-image:
+    radial-gradient(circle at 10% 20%, rgba(123, 45, 255, 0.15) 0%, transparent 25%),
+    radial-gradient(circle at 90% 80%, rgba(0, 247, 255, 0.15) 0%, transparent 25%);
+  overflow-x: hidden;
+}
+
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+/* === ХЕДЕР === */
+.dark-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--bg-darker);
+  padding: 1rem 2rem;
+  border-bottom: 1px solid rgba(0, 247, 255, 0.2);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.dark-header .header-logo {
+  height: 40px;
+}
+
+.dark-header .menu {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.dark-header .menu a {
+  text-decoration: none;
+  color: var(--text);
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 600;
+  transition: color 0.3s ease;
+}
+
+.dark-header .menu a:hover {
+  color: var(--primary);
+}
+
+/* === БУРГЕР === */
+.mobile-toggle {
+  display: none;
+  font-size: 2rem;
+  color: var(--primary);
+  cursor: pointer;
+  user-select: none;
+}
+
+/* Для мобильных — меню скрываем */
+@media (max-width: 768px) {
+  .dark-header .menu {
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    top: 60px;
+    right: 20px;
+    background: rgba(10, 10, 26, 0.95);
+    border: 1px solid rgba(0,247,255,0.3);
+    border-radius: 8px;
+    padding: 1rem;
+  }
+
+  .dark-header .menu.open {
+    display: flex;
+  }
+
+  .mobile-toggle {
+    display: block;
+  }
+}
+
+/* === СЕКЦИЯ ХЕДЕРА СТРАНИЦЫ === */
+header {
+  text-align: center;
+  margin-bottom: 3rem;
+  position: relative;
+  padding: 2rem 0;
+  background: linear-gradient(90deg, transparent, rgba(0, 247, 255, 0.1), transparent);
+}
+
+h1 {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 3.5rem;
+  margin: 0;
+  background: linear-gradient(90deg, var(--primary), var(--secondary));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: 0 0 15px rgba(0, 247, 255, 0.5);
+  letter-spacing: 3px;
+  margin-bottom: 1rem;
+}
+
+h2 {
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 500;
+  color: var(--primary);
+  font-size: 1.5rem;
+  letter-spacing: 1px;
+  margin-top: 0;
+}
+
+.tagline {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 1.2rem;
+  color: var(--text-dim);
+  max-width: 800px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* === ФОРМА === */
+.form-container {
+  background: var(--card-bg);
+  border: 1px solid rgba(0, 247, 255, 0.3);
+  border-radius: 16px;
+  padding: 2.5rem;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 0 30px rgba(0, 247, 255, 0.2);
+  margin-bottom: 3rem;
+  transition: all 0.5s ease;
+}
+
+.form-container:hover {
+  box-shadow: 0 0 40px rgba(0, 247, 255, 0.3);
+  transform: translateY(-5px);
+}
+
+label {
+  display: block;
+  margin-bottom: 0.8rem;
+  color: var(--primary);
+  font-weight: 600;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 1.1rem;
+  letter-spacing: 0.5px;
+}
+
+textarea {
+  width: 100%;
+  padding: 15px;
+  margin-bottom: 1.5rem;
+  background: rgba(5, 5, 16, 0.7);
+  border: 1px solid rgba(0, 247, 255, 0.4);
+  border-radius: 8px;
+  color: var(--text);
+  font-family: 'Exo 2', sans-serif;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+}
+
+textarea::placeholder {
+  color: var(--text-dim);
+  opacity: 0.7;
+}
+
+textarea:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 15px rgba(0, 247, 255, 0.3);
+  background: rgba(5, 5, 16, 0.9);
+}
+
+/* === КНОПКА === */
+button {
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  color: var(--bg-darker);
+  border: none;
+  padding: 15px 40px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  font-family: 'Rajdhani', sans-serif;
+  display: block;
+  margin: 2rem auto 0;
+  box-shadow: 0 0 20px rgba(0, 247, 255, 0.5);
+  position: relative;
+  overflow: hidden;
+}
+
+button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 0 30px rgba(0, 247, 255, 0.7);
+}
+
+/* === ЛОАДЕР === */
+.loading {
+  display: none;
+  text-align: center;
+  margin: 3rem 0;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.loading.active {
+  display: block;
+  opacity: 1;
+}
+
+.loading-spinner {
+  display: inline-block;
+  width: 50px;
+  height: 50px;
+  border: 5px solid rgba(0, 247, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: var(--primary);
+  animation: spin 1s ease-in-out infinite;
+  margin-bottom: 1.5rem;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* === РЕЗУЛЬТАТЫ === */
+.result-section {
+  display: none;
+  margin-top: 3rem;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+.result-section.active {
+  display: block;
+  opacity: 1;
+}
+
+.result-tabs {
+  display: flex;
+  margin-bottom: 2rem;
+  border-bottom: 1px solid rgba(0, 247, 255, 0.3);
+  flex-wrap: wrap;
+}
+
+.tab {
+  padding: 1rem 2rem;
+  cursor: pointer;
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: var(--text-dim);
+  position: relative;
+  transition: all 0.3s ease;
+  border: none;
+  background: none;
+}
+
+.tab.active {
+  color: var(--primary);
+}
+
+.tab.active::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--primary), var(--accent));
+}
+
+.tab:hover {
+  color: var(--text);
+  background: rgba(0, 247, 255, 0.1);
+}
+
+.tab-content {
+  display: none;
+  animation: fadeIn 0.5s ease;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* === КАРТОЧКИ === */
+.profession-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.profession-card {
+  background: var(--card-bg);
+  border: 1px solid rgba(0, 247, 255, 0.3);
+  border-radius: 16px;
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.profession-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0, 247, 255, 0.2);
+}
+
+/* === ГРАФИКИ === */
+.chart-container {
+  background: var(--card-bg);
+  border: 1px solid rgba(0, 247, 255, 0.3);
+  border-radius: 16px;
+  padding: 1.5rem;
+  margin-top: 3rem;
+  min-height: 320px;
+  position: relative;
+}
+
+.chart-title {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 1.5rem;
+  color: var(--primary);
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.chart-container canvas {
+  width: 100% !important;
+  height: 100% !important;
+  max-height: 280px;
+}
+
+/* === АДАПТИВ === */
+@media (max-width: 768px) {
+  .container { padding: 1rem; }
+  h1 { font-size: 2.5rem; }
+  .form-container { padding: 1.5rem; }
+  .profession-cards { grid-template-columns: 1fr; gap: 1rem; }
+  .result-tabs { flex-direction: column; }
+  .tab { text-align: center; }
+  button { width: 100%; padding: 12px 20px; }
+}
+
+@media (max-width: 480px) {
+  h1 { font-size: 2rem; }
+  .form-container { padding: 1rem; }
+  .container { padding: 0.5rem; }
+}

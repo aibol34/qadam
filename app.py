@@ -1,40 +1,69 @@
-from flask import Flask, request, render_template, Response, jsonify
-from dotenv import load_dotenv
-import openai
 import os
 import json
 import requests
-from collections import defaultdict
 import statistics
+from collections import defaultdict
+from flask import Flask, request, render_template, Response, jsonify
+from dotenv import load_dotenv
+import openai
+from flask_login import LoginManager, current_user
 
-# Загружаем .env
+# ==== Загрузка переменных окружения ====
 load_dotenv()
 
-# Настраиваем OpenAI клиента
+# ==== Flask init ====
+app = Flask(__name__, template_folder="templates")
+app.secret_key = os.getenv("SECRET_KEY", "mysecretkey123")
+
+# ==== Импорт блюпринтов и User ====
+from auth import auth_bp, User
+from dashboard import dashboard_bp
+
+# ==== Flask-Login ====
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = "auth.login"
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.get(user_id)   # метод get() у тебя уже есть в auth.py
+
+# ==== OpenAI клиент ====
 client = openai.OpenAI(
     api_key=os.getenv("OPENAI_API_KEY"),
     organization=os.getenv("OPENAI_ORG_ID") or None
 )
 
-app = Flask(__name__, template_folder='templates')
+# ==== Регистрация блюпринтов ====
+app.register_blueprint(auth_bp)
+app.register_blueprint(dashboard_bp)
 
 
-@app.route('/')
+# ==== Основные маршруты ====
+
+@app.route("/")
 def index():
-    return render_template('index.html')
+    return render_template("index.html")
 
 
-@app.route('/career')
+@app.route("/career")
 def career():
-    return render_template('career.html')
+    return render_template("career.html")
 
 
-@app.errorhandler(404)
-def page_not_found(e):
-    return render_template('404.html'), 404
+@app.route("/ai-tree")
+def ai_tree():
+    return render_template("ai-tree.html")
 
 
-@app.route('/career/predict', methods=['POST'])
+@app.route("/about")
+def about():
+    return render_template("o_nas.html")
+
+
+# ==== API для AI Career ====
+
+@app.route("/career/predict", methods=["POST"])
 def predict():
     data = request.get_json()
     skills = data.get("skills", "")
@@ -48,20 +77,14 @@ def predict():
                     "Ты — ИИ-помощник по карьере. "
                     "На основе навыков пользователя предложи ТОП-10 подходящих профессий. "
                     "Для каждой профессии укажи: вероятность в %, и что нужно дополнительно изучить. "
-                    "Если даны интересы — предложи ещё 10 профессий, которые стоит рассмотреть, если пользователь хочет "
-                    "развиваться в этих интересах. Ответ строго на русском языке, структурированный. "
-                    "Формат вывода:\n"
+                    "Если даны интересы — предложи ещё 10 профессий. "
+                    "Формат:\n"
                     "1. **Профессия** - X% совпадение\n"
                     "   • Что изучить: ...\n"
-                    "   • Перспективы: ...\n"
-                    "2. **Профессия** - X% совпадение\n"
-                    "   ... и так далее"
+                    "   • Перспективы: ..."
                 )
             },
-            {
-                "role": "user",
-                "content": f"Навыки: {skills}\nИнтересы: {interests}"
-            }
+            {"role": "user", "content": f"Навыки: {skills}\nИнтересы: {interests}"}
         ]
 
         response = client.chat.completions.create(
@@ -77,7 +100,7 @@ def predict():
         return Response(json.dumps({"error": str(e)}, ensure_ascii=False), mimetype="application/json")
 
 
-@app.route('/career/relevance', methods=['POST'])
+@app.route("/career/relevance", methods=["POST"])
 def relevance():
     data = request.get_json()
     professions = data.get("professions", [])
@@ -86,19 +109,12 @@ def relevance():
     try:
         result = []
         for profession in professions:
-            # Получаем данные по вакансиям
             url = "https://api.hh.ru/vacancies"
-            params = {
-                "text": profession,
-                "area": area_id,
-                "per_page": 100,
-                "period": 30  # Вакансии за последние 30 дней
-            }
+            params = {"text": profession, "area": area_id, "per_page": 100, "period": 30}
             response = requests.get(url, params=params)
             data = response.json()
             vacancies = data.get("items", [])
 
-            # Собираем статистику по зарплатам
             salaries = []
             skills_counter = defaultdict(int)
 
@@ -111,14 +127,10 @@ def relevance():
                     for skill in v["key_skills"]:
                         skills_counter[skill["name"].lower()] += 1
 
-            # Топ-5 востребованных навыков
             top_skills = sorted(skills_counter.items(), key=lambda x: x[1], reverse=True)[:5]
-
-            # Средняя и медианная зарплата
             avg_salary = int(statistics.mean(salaries)) if salaries else None
             median_salary = int(statistics.median(salaries)) if salaries else None
 
-            # Динамика (сравнение с прошлым месяцем)
             params["period"] = 60
             prev_month_response = requests.get(url, params=params)
             prev_month_data = prev_month_response.json()
@@ -128,7 +140,7 @@ def relevance():
             trend = ""
             if current_count > prev_month_count:
                 trend = f"↑ {round((current_count - prev_month_count) / prev_month_count * 100)}%"
-            elif current_count < prev_month_count:
+            elif current_count < prev_month_count and current_count > 0:
                 trend = f"↓ {round((prev_month_count - current_count) / current_count * 100)}%"
             else:
                 trend = "→ 0%"
@@ -149,59 +161,64 @@ def relevance():
         return Response(json.dumps({"error": str(e)}, ensure_ascii=False), mimetype="application/json")
 
 
-@app.route("/ai-tree")
-def ai_tree():
-    return render_template("ai-tree.html")
-
-
-@app.route("/about")
-def about():
-    return render_template("o_nas.html")
-
+# ==== API для AI-дерева ====
 
 @app.route("/ai-tree/api/node", methods=["POST"])
 def generate_node():
     data = request.get_json()
     path = data.get("path", [])
+    step = len(path) + 1
+
+    # Если достигли лимита → тест заканчивается
+    if step > 10:
+        return jsonify({"question": None, "options": [], "end": True})
 
     last_answer = path[-1]["answer"] if path else "начало"
 
     prompt = f"""
 Ты создаёшь интерактивное дерево профориентации.
+Это вопрос №{step} из 10.
 Последний выбор пользователя: \"{last_answer}\".
-Сгенерируй один вопрос с двумя вариантами ответа основывая на этом ответе, но вопросы не должны повторяться и должны быть ориентированные на рабочие профессии. 
-Формат:
-Вопрос: ...
-1. Вариант 1
-2. Вариант 2
+Сгенерируй новый вопрос (1 строка) и два варианта ответа (по 1 строке).
+Формат строго такой:
+Вопрос: [текст вопроса]
+1. [вариант ответа 1]
+2. [вариант ответа 2]
 """
 
     response = client.chat.completions.create(
         model="gpt-4",
         messages=[{"role": "user", "content": prompt}],
-        temperature=0.8,
+        temperature=0.7,
     )
 
-    content = response.choices[0].message.content.strip()
-    lines = content.split("\n")
-    question = lines[0].replace("Вопрос: ", "").strip()
-    options = [line.replace("1.", "").replace("2.", "").strip() for line in lines[1:3]]
+    raw_text = response.choices[0].message.content.strip()
+    lines = [l.strip() for l in raw_text.split("\n") if l.strip()]
 
-    return jsonify({"question": question, "options": options})
+    question = lines[0].replace("Вопрос:", "").strip()
+    options = [l[2:].strip() for l in lines[1:] if l.startswith(("1.", "2."))]
+
+    if len(options) < 2:
+        options = ["Вариант А", "Вариант Б"]
+
+    return jsonify({"question": question, "options": options, "step": step, "end": False})
+
+
+
 
 
 @app.route("/ai-tree/api/result", methods=["POST"])
 def generate_result():
     data = request.get_json()
     path = data.get("path", [])
-
     dialogue = "\n".join([f"{i+1}) Вопрос: {item['question']} — Ответ: {item['answer']}" for i, item in enumerate(path)])
 
-    prompt = f"""Пользователь прошёл профориентационный тест.
+    prompt = f"""
+Пользователь прошёл профориентационный тест.
 Вот его путь:
 {dialogue}
-В начале ответа ОБЯЗАТЕЛЬНО напиши строку "Профессия: ...", где ... — только короткое название профессии (без лишних слов).
-Затем обязательно дай объяснение в 2-4 предложениях, почему ты выбрал именно её.
+В начале ответа напиши "Профессия: ..." (только название).
+Затем объясни в 2-4 предложениях, почему именно эта профессия подходит.
 """
 
     response = client.chat.completions.create(
@@ -218,36 +235,39 @@ def generate_result():
 def get_vacancies():
     data = request.get_json()
     profession = data.get("profession", "")
-    url = "https://api.hh.kz/vacancies"
-    params = {
-        "text": profession,
-        "area": 159,    # 159 — Казахстан
-        "per_page": 5
-    }
-    r = requests.get(url, params=params, timeout=10)
-    res = r.json()
+
+    url = "https://api.hh.ru/vacancies"   # не .kz, а общий .ru
+    areas = [159, 40, 1]  # Казахстан, Россия, весь мир (Москва как fallback)
     vacancies = []
-    for v in res.get('items', []):
-        salary = v.get("salary")
-        salary_str = None
-        if salary:
-            frm = salary.get("from") or ""
-            to = salary.get("to") or ""
-            cur = salary.get("currency") or ""
-            salary_str = f"{frm}–{to} {cur}".replace("– ", "").strip()
-        vacancies.append({
-            "name": v.get("name"),
-            "company": v.get("employer", {}).get("name"),
-            "url": v.get("alternate_url"),
-            "salary": salary_str
-        })
+
+    for area in areas:
+        params = {"text": profession, "area": area, "per_page": 10}
+        r = requests.get(url, params=params, timeout=10)
+        res = r.json()
+
+        for v in res.get("items", []):
+            salary = v.get("salary")
+            salary_str = None
+            if salary:
+                frm = salary.get("from") or ""
+                to = salary.get("to") or ""
+                cur = salary.get("currency") or ""
+                salary_str = f"{frm}–{to} {cur}".strip("– ")
+
+            vacancies.append({
+                "name": v.get("name"),
+                "company": v.get("employer", {}).get("name"),
+                "url": v.get("alternate_url"),
+                "salary": salary_str
+            })
+
+        if vacancies:
+            break  # если нашли хоть что-то, выходим из цикла
+
     return jsonify({"vacancies": vacancies})
 
 
-@app.errorhandler(404)
-def page_not_found(e):
-    return render_template('404.html'), 404
 
-
-if __name__ == '__main__':
+# ==== Запуск ====
+if __name__ == "__main__":
     app.run(debug=True, port=8080)

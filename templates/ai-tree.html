@@ -2,165 +2,64 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <title>Дерево профессий</title>
-  <style>
-    body {
-      background: #181026;
-      min-height: 100vh;
-      margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-    }
-    .tree-area {
-      position: relative;
-      width: 100vw;
-      min-height: 650px;
-      padding-bottom: 900px;
-    }
-    .tree-svg {
-      position: absolute;
-      left: 0; top: 0; pointer-events: none;
-      width: 100%; height: 100%;
-      z-index: 0;
-    }
-    .tree-node {
-      position: absolute;
-      min-width: 170px;
-      max-width: 400px;
-      min-height: 40px;
-      background: #221943;
-      color: #c8d3f5;
-      border: 1.5px solid #34436e;
-      border-radius: 12px;
-      box-shadow: 0 0 15px #19122b99;
-      text-align: center;
-      padding: 12px;
-      z-index: 2;
-      transition: box-shadow 0.25s, border 0.25s;
-      font-size: 15px;
-      word-break: break-word;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-    }
-    .tree-node.active {
-      box-shadow: 0 0 22px #60a3d9, 0 0 12px #211933;
-      border-color: #60a3d9;
-      color: #fff;
-      font-weight: 700;
-    }
-    .tree-node button {
-      margin-top: 10px;
-      background: #233e6b;
-      color: #c8d3f5;
-      border: none;
-      border-radius: 6px;
-      padding: 6px 12px;
-      cursor: pointer;
-      font-size: 15px;
-      transition: background 0.18s;
-      min-width: 120px;
-      margin: 5px 0;
-    }
-    .tree-node button:hover:enabled {
-      background: #4069b3;
-    }
-    .tree-node button:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-    }
-    .inline-loader {
-      width: 36px;
-      height: 36px;
-      margin: 18px auto;
-      border: 5px solid #4da8ff55;
-      border-top: 5px solid #60a3d9;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-      background: none;
-      display: block;
-    }
-    @keyframes spin {
-      0% { transform: rotate(0deg);}
-      100% { transform: rotate(360deg);}
-    }
-    #resultBox {
-      margin: 48px auto 24px auto;
-      padding: 24px 32px;
-      background: linear-gradient(90deg, #222045 80%, #27265a 100%);
-      border-radius: 14px;
-      border-left: 6px solid #48ff97;
-      font-size: 18px;
-      color: #c8f5e6;
-      box-shadow: 0 4px 48px #11182a99;
-      max-width: 700px;
-      min-width: 280px;
-      word-break: break-word;
-      display: none;
-      transition: opacity 0.3s;
-      text-align: left;
-    }
-    #resultBox.show {
-      display: block;
-      opacity: 1;
-    }
-    #startBtn {
-      position: absolute;
-      left: 40px;
-      top: 20px;
-      z-index: 10;
-      padding: 10px 20px;
-      background: #233e6b;
-      border: none;
-      color: #fff;
-      border-radius: 7px;
-      font-size: 17px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background 0.18s;
-    }
-    #startBtn:disabled {opacity: 0.7; cursor: not-allowed;}
-    #vacanciesBox {
-      margin: 36px auto 32px auto;
-      max-width: 700px;
-      background: #232052;
-      border-radius: 12px;
-      padding: 22px 28px;
-      box-shadow: 0 2px 32px #10163055;
-      color: #d3f8fe;
-      font-size: 16px;
-    }
-    #vacanciesBox ul {
-      margin: 14px 0 0 0;
-      padding-left: 20px;
-    }
-    #vacanciesBox li {
-      margin-bottom: 13px;
-    }
-    #vacanciesBox a {
-      color: #7cdfff;
-      font-weight: 500;
-      text-decoration: none;
-    }
-  </style>
+  <title>AI Дерево профессий</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Стили -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='header_footer.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='ai-tree.css') }}">
+  <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='logo/logo_q.svg') }}">
 </head>
 <body>
-  <div id="header-placeholder"></div>
-  <!-- <button id="startBtn">Начать</button> -->
-  <div class="tree-area" id="treeArea">
-    <svg class="tree-svg" id="treeSVG"></svg>
-  </div>
-  <div id="resultBox"></div>
-  <div id="vacanciesBox"></div>
+
+  <!-- Хэдер -->
+  {% include "header.html" %}
+
+  <!-- Контент -->
+  <main>
+    <div class="ai-tree-container">
+      <!-- Кнопка запуска -->
+      <button id="startBtn" class="ai-start-btn">🚀 Начать</button>
+
+      <!-- Область для дерева -->
+      <div class="ai-tree-area" id="treeArea">
+        <!-- Блок загрузки (снизу вопросов) -->
+        <div id="loadingBox" class="ai-loading-box">
+          <div class="ai-spinner"></div>
+          <p>Генерируется вопрос...</p>
+        </div>
+      </div>
+
+      <!-- Результат -->
+      <div id="resultBox" class="ai-result-box"></div>
+
+      <!-- Вакансии -->
+      <div id="vacanciesBox" class="ai-vacancies-box"></div>
+    </div>
+
+    <!-- Прогресс-бар -->
+    <div class="ai-progress-bar" id="progressBar" style="display: none;">
+      <div class="ai-progress-fill" id="progressFill"></div>
+    </div>
+  </main>
+
+  <!-- Футер -->
+  {% include "footer.html" %}
+
+  <!-- Скрипты -->
+  <script src="{{ url_for('static', filename='js/tree-svg.js') }}"></script>
 
   <script>
-        fetch('header.html')
-      .then(res => res.text())
-      .then(data => document.getElementById('header-placeholder').innerHTML = data);
-      fetch('/static/html/header.html')
-    .then(res => res.text())
-    .then(data => document.getElementById('header-placeholder').innerHTML = data);
+  document.addEventListener("DOMContentLoaded", () => {
+    const toggle = document.getElementById("mobileToggle");
+    const menu = document.getElementById("mainMenu");
+    if (toggle && menu) {
+      toggle.addEventListener("click", () => {
+        menu.classList.toggle("open");
+      });
+    }
+  });
   </script>
-  <script src="/static/js/tree-svg.js"></script>
 </body>
 </html>

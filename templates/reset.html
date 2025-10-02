@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="auth-section">
+  <h2>Сброс пароля</h2>
+  <form method="POST" class="auth-form">
+    <input type="email" name="email" placeholder="Почта" required>
+    <input type="text" name="code" placeholder="Код из письма" required>
+    <input type="password" name="password" placeholder="Новый пароль" required>
+    <button type="submit" class="button">Обновить пароль</button>
+  </form>
+</section>
+{% endblock %}

@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}Дэшборд — QadamDapp{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+  <h2>Добро пожаловать, {{ user.name or user.username }}!</h2>
+
+  <div class="dashboard-cards">
+    <a href="{{ url_for('career') }}" class="dash-card">🎯 AI навыки</a>
+    <a href="{{ url_for('ai_tree') }}" class="dash-card">🌿 Профориентация</a>
+    <a href="{{ url_for('auth.logout') }}" class="dash-card">🚪 Выйти</a>
+  </div>
+</div>
+{% endblock %}
