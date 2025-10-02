@@ -236,8 +236,14 @@ def get_vacancies():
     data = request.get_json()
     profession = data.get("profession", "")
 
-    url = "https://api.hh.ru/vacancies"   # не .kz, а общий .ru
-    areas = [159, 40, 1]  # Казахстан, Россия, весь мир (Москва как fallback)
+    # Очищаем строку от "Профессия:" и лишнего текста
+    if ":" in profession:
+        profession = profession.split(":")[1].strip()
+    if "." in profession:
+        profession = profession.split(".")[0].strip()
+
+    url = "https://api.hh.ru/vacancies"   # общий API
+    areas = [159, 40, 1]  # Казахстан, Россия, fallback = Москва
     vacancies = []
 
     for area in areas:
@@ -262,9 +268,10 @@ def get_vacancies():
             })
 
         if vacancies:
-            break  # если нашли хоть что-то, выходим из цикла
+            break  # нашли вакансии — выходим
 
     return jsonify({"vacancies": vacancies})
+
 
 
 
