@@ -1,0 +1,207 @@
+/* ===== Общие стили ===== */
+body {
+  background: #181026;
+  font-family: 'Segoe UI', Tahoma, sans-serif;
+  color: #c8d3f5;
+  margin: 0;
+  padding: 0;
+}
+
+.ai-tree-container {
+  max-width: 850px;
+  margin: 0 auto;
+  padding: 40px 15px;
+  text-align: center;
+}
+
+/* ===== Кнопка запуска ===== */
+.ai-start-btn {
+  display: inline-block;
+  margin: 60px auto;
+  padding: 14px 32px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #fff;
+  background: linear-gradient(135deg, #3a1c71, #d76d77, #ffaf7b);
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: 0.3s;
+  box-shadow: 0 0 15px rgba(215,109,119,0.6);
+}
+
+.ai-start-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 20px #d76d77;
+}
+
+/* ===== Область вопросов ===== */
+.ai-tree-area {
+  margin-top: 20px;
+}
+
+/* ===== Блок загрузки (внизу) ===== */
+.ai-loading-box {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 25px auto;
+  padding: 18px;
+  border-radius: 12px;
+  background: #241a48;
+  border: 1px solid #3e3a6d;
+  max-width: 320px;
+  animation: fadeIn 0.5s ease;
+}
+
+.ai-loading-box p {
+  margin-top: 12px;
+  font-size: 0.95rem;
+  color: #cdd9ff;
+}
+
+/* Спиннер */
+.ai-spinner {
+  width: 40px;
+  height: 40px;
+  border: 5px solid #3e3a6d;
+  border-top: 5px solid #4dafff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  100% { transform: rotate(360deg); }
+}
+
+/* ===== Вопрос ===== */
+.ai-question-box {
+  background: linear-gradient(135deg, #2a2563, #1e1b3c);
+  border: 1.5px solid #3e3a6d;
+  border-radius: 14px;
+  padding: 20px;
+  margin: 20px auto;
+  box-shadow: 0 0 14px rgba(0, 0, 0, 0.35);
+  animation: fadeIn 0.6s ease forwards;
+  max-width: 700px;
+  text-align: center;
+}
+
+.ai-question-box h3 {
+  font-size: 1rem;
+  margin-bottom: 15px;
+  font-weight: 600;
+  color: #cdd9ff;
+}
+
+/* ===== Варианты ответов ===== */
+.ai-answer-btn {
+  display: block;
+  width: 100%;
+  margin: 10px 0;
+  padding: 14px 18px;
+  background: linear-gradient(135deg, #1b82c4, #6749d3);
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 500;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.ai-answer-btn:hover:not(:disabled) {
+  transform: scale(1.03);
+  box-shadow: 0 0 12px #4d9cff;
+}
+
+/* выбранный */
+.ai-answer-btn.selected {
+  background: linear-gradient(135deg, #00c853, #009624) !important;
+  box-shadow: 0 0 15px rgba(0, 200, 83, 0.7) !important;
+  color: #fff !important;
+  opacity: 1 !important;
+  animation: pulseSelect 0.4s ease;
+}
+
+/* не выбранные */
+.ai-answer-btn.disabled,
+.ai-answer-btn:disabled:not(.selected) {
+  background: #333 !important;
+  color: #888 !important;
+  cursor: not-allowed !important;
+  opacity: 0.7 !important;
+  box-shadow: none !important;
+  transform: none !important;
+}
+
+/* ===== Анимация выбранного */
+@keyframes pulseSelect {
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.08); }
+  100% { transform: scale(1); }
+}
+
+/* ===== Результат ===== */
+.ai-result-box {
+  margin-top: 25px;
+  padding: 20px;
+  background: #1c153b;
+  border: 1px solid #3e3a6d;
+  border-radius: 10px;
+  text-align: center;
+  display: none;
+  animation: fadeIn 0.6s ease;
+}
+
+.ai-result-box.show { display: block; }
+
+.ai-result-box h2 {
+  color: #4cafef;
+  margin-bottom: 10px;
+}
+
+/* ===== Вакансии ===== */
+.ai-vacancies-box {
+  margin-top: 20px;
+  padding: 20px;
+  background: #211a44;
+  border: 1px solid #3e3a6d;
+  border-radius: 10px;
+  animation: fadeIn 0.6s ease;
+}
+
+/* ===== Прогресс-бар ===== */
+.ai-progress-bar {
+  width: 100%;
+  height: 12px;
+  background: #2c2c4a;
+  border-radius: 8px;
+  overflow: hidden;
+  margin: 20px 0;
+}
+
+.ai-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #4dafff, #00e676);
+  width: 0;
+  transition: width 0.5s ease;
+}
+
+/* ===== Ошибки ===== */
+.error-message {
+  background: #ff1744;
+  color: #fff;
+  padding: 10px 12px;
+  border-radius: 6px;
+  margin-top: 12px;
+  text-align: center;
+  font-size: 0.85rem;
+}
+
+/* ===== Анимация fadeIn ===== */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}

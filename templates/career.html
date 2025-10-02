@@ -1,816 +1,111 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-  <meta charset="UTF-8">
-  <title>Neon Career Navigator</title>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;700&family=Orbitron:wght@700&family=Exo+2:wght@400;600&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --primary: #00f7ff;
-      --secondary: #ff00f7;
-      --accent: #7b2dff;
-      --bg-dark: #0a0a1a;
-      --bg-darker: #050510;
-      --card-bg: rgba(20, 20, 40, 0.7);
-      --text: #e0e0ff;
-      --text-dim: #a0a0c0;
-      --success: #00ffaa;
-      --warning: #ffaa00;
-      --danger: #ff3d3d;
-    }
-
-    body {
-      font-family: 'Exo 2', sans-serif;
-      background: var(--bg-dark);
-      color: var(--text);
-      margin: 0;
-      padding: 0;
-      min-height: 100vh;
-      background-image:
-        radial-gradient(circle at 10% 20%, rgba(123, 45, 255, 0.15) 0%, transparent 25%),
-        radial-gradient(circle at 90% 80%, rgba(0, 247, 255, 0.15) 0%, transparent 25%);
-      overflow-x: hidden;
-    }
-
-    .container {
-      max-width: 1400px;
-      margin: 0 auto;
-      padding: 2rem;
-    }
-
-    header {
-      text-align: center;
-      margin-bottom: 3rem;
-      position: relative;
-      padding: 2rem 0;
-      background: linear-gradient(90deg, transparent, rgba(0, 247, 255, 0.1), transparent);
-    }
-
-    h1 {
-      font-family: 'Orbitron', sans-serif;
-      font-size: 3.5rem;
-      margin: 0;
-      background: linear-gradient(90deg, var(--primary), var(--secondary));
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-      text-shadow: 0 0 15px rgba(0, 247, 255, 0.5);
-      letter-spacing: 3px;
-      margin-bottom: 1rem;
-    }
-
-    h2 {
-      font-family: 'Rajdhani', sans-serif;
-      font-weight: 500;
-      color: var(--primary);
-      font-size: 1.5rem;
-      letter-spacing: 1px;
-      margin-top: 0;
-    }
-
-    .tagline {
-      font-family: 'Rajdhani', sans-serif;
-      font-size: 1.2rem;
-      color: var(--text-dim);
-      max-width: 800px;
-      margin: 0 auto;
-      line-height: 1.6;
-    }
-
-    .form-container {
-      background: var(--card-bg);
-      border: 1px solid rgba(0, 247, 255, 0.3);
-      border-radius: 16px;
-      padding: 2.5rem;
-      backdrop-filter: blur(10px);
-      box-shadow: 0 0 30px rgba(0, 247, 255, 0.2);
-      margin-bottom: 3rem;
-      transition: all 0.5s ease;
-    }
-
-    .form-container:hover {
-      box-shadow: 0 0 40px rgba(0, 247, 255, 0.3);
-      transform: translateY(-5px);
-    }
-
-    label {
-      display: block;
-      margin-bottom: 0.8rem;
-      color: var(--primary);
-      font-weight: 600;
-      font-family: 'Rajdhani', sans-serif;
-      font-size: 1.1rem;
-      letter-spacing: 0.5px;
-    }
-
-    input, textarea {
-      width: 100%;
-      padding: 15px;
-      margin-bottom: 1.5rem;
-      background: rgba(5, 5, 16, 0.7);
-      border: 1px solid rgba(0, 247, 255, 0.4);
-      border-radius: 8px;
-      color: var(--text);
-      font-family: 'Exo 2', sans-serif;
-      font-size: 1rem;
-      transition: all 0.3s ease;
-    }
-
-    input::placeholder, textarea::placeholder {
-      color: var(--text-dim);
-      opacity: 0.7;
-    }
-
-    input:focus, textarea:focus {
-      outline: none;
-      border-color: var(--primary);
-      box-shadow: 0 0 15px rgba(0, 247, 255, 0.3);
-      background: rgba(5, 5, 16, 0.9);
-    }
-
-    button {
-      background: linear-gradient(135deg, var(--primary), var(--accent));
-      color: var(--bg-darker);
-      border: none;
-      padding: 15px 40px;
-      font-size: 1.1rem;
-      font-weight: 700;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      text-transform: uppercase;
-      letter-spacing: 1.5px;
-      font-family: 'Rajdhani', sans-serif;
-      display: block;
-      margin: 2rem auto 0;
-      box-shadow: 0 0 20px rgba(0, 247, 255, 0.5);
-      position: relative;
-      overflow: hidden;
-    }
-
-    button:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 0 30px rgba(0, 247, 255, 0.7);
-    }
-
-    button::after {
-      content: '';
-      position: absolute;
-      top: -50%;
-      left: -60%;
-      width: 200%;
-      height: 200%;
-      background: linear-gradient(
-        to right,
-        rgba(255, 255, 255, 0) 0%,
-        rgba(255, 255, 255, 0.1) 50%,
-        rgba(255, 255, 255, 0) 100%
-      );
-      transform: rotate(30deg);
-      transition: all 0.3s;
-    }
-
-    button:hover::after {
-      left: 100%;
-    }
-
-    .result-section {
-      display: none;
-      margin-top: 3rem;
-    }
-
-    .result-tabs {
-      display: flex;
-      margin-bottom: 2rem;
-      border-bottom: 1px solid rgba(0, 247, 255, 0.3);
-    }
-
-    .tab {
-      padding: 1rem 2rem;
-      cursor: pointer;
-      font-family: 'Rajdhani', sans-serif;
-      font-weight: 600;
-      font-size: 1.1rem;
-      color: var(--text-dim);
-      position: relative;
-      transition: all 0.3s ease;
-    }
-
-    .tab.active {
-      color: var(--primary);
-    }
-
-    .tab.active::after {
-      content: '';
-      position: absolute;
-      bottom: -1px;
-      left: 0;
-      right: 0;
-      height: 3px;
-      background: linear-gradient(90deg, var(--primary), var(--accent));
-    }
-
-    .tab:hover {
-      color: var(--text);
-    }
-
-    .tab-content {
-      display: none;
-    }
-
-    .tab-content.active {
-      display: block;
-      animation: fadeIn 0.5s ease;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .ai-recommendations {
-      background: var(--card-bg);
-      border: 1px solid rgba(0, 247, 255, 0.3);
-      border-radius: 16px;
-      padding: 2rem;
-      margin-bottom: 3rem;
-      white-space: pre-wrap;
-      line-height: 1.8;
-      font-size: 1.1rem;
-    }
-
-    .ai-recommendations strong {
-      color: var(--primary);
-      font-weight: 600;
-    }
-
-    .profession-cards {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-      gap: 2rem;
-      margin-top: 2rem;
-    }
-
-    .profession-card {
-      background: var(--card-bg);
-      border: 1px solid rgba(0, 247, 255, 0.3);
-      border-radius: 16px;
-      padding: 1.5rem;
-      transition: all 0.3s ease;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .profession-card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 4px;
-      background: linear-gradient(90deg, var(--primary), var(--accent));
-    }
-
-    .profession-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 10px 25px rgba(0, 247, 255, 0.2);
-      border-color: var(--primary);
-    }
-
-    .profession-title {
-      font-family: 'Rajdhani', sans-serif;
-      font-size: 1.4rem;
-      font-weight: 700;
-      color: var(--primary);
-      margin-bottom: 1rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .salary {
-      font-size: 1.2rem;
-      color: var(--success);
-      font-weight: 700;
-    }
-
-    .vacancy-count {
-      display: inline-block;
-      padding: 0.3rem 0.8rem;
-      background: rgba(0, 247, 255, 0.2);
-      border-radius: 20px;
-      font-size: 0.9rem;
-      color: var(--primary);
-    }
-
-    .trend {
-      display: inline-block;
-      margin-left: 0.5rem;
-      font-weight: 700;
-    }
-
-    .trend.up {
-      color: var(--success);
-    }
-
-    .trend.down {
-      color: var(--danger);
-    }
-
-    .trend.neutral {
-      color: var(--warning);
-    }
-
-    .stats {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 1rem;
-      margin: 1.5rem 0;
-    }
-
-    .stat-item {
-      background: rgba(5, 5, 16, 0.7);
-      padding: 0.8rem;
-      border-radius: 8px;
-      text-align: center;
-    }
-
-    .stat-value {
-      font-size: 1.3rem;
-      font-weight: 700;
-      color: var(--primary);
-      margin-bottom: 0.3rem;
-    }
-
-    .stat-label {
-      font-size: 0.9rem;
-      color: var(--text-dim);
-    }
-
-    .skills-list {
-      margin-top: 1.5rem;
-    }
-
-    .skills-list h4 {
-      color: var(--primary);
-      font-family: 'Rajdhani', sans-serif;
-      margin-bottom: 0.8rem;
-      font-size: 1.1rem;
-    }
-
-    .skills {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-    }
-
-    .skill {
-      background: rgba(0, 247, 255, 0.1);
-      color: var(--primary);
-      padding: 0.4rem 0.8rem;
-      border-radius: 20px;
-      font-size: 0.9rem;
-    }
-
-    .chart-container {
-      background: var(--card-bg);
-      border: 1px solid rgba(0, 247, 255, 0.3);
-      border-radius: 16px;
-      padding: 1.5rem;
-      margin-top: 3rem;
-      height: 300px;
-    }
-
-    .chart-title {
-      font-family: 'Rajdhani', sans-serif;
-      font-size: 1.5rem;
-      color: var(--primary);
-      margin-bottom: 1.5rem;
-      text-align: center;
-    }
-
-    .loading {
-      display: none;
-      text-align: center;
-      margin: 3rem 0;
-    }
-
-    .loading-spinner {
-      display: inline-block;
-      width: 50px;
-      height: 50px;
-      border: 5px solid rgba(0, 247, 255, 0.3);
-      border-radius: 50%;
-      border-top-color: var(--primary);
-      animation: spin 1s ease-in-out infinite;
-      margin-bottom: 1.5rem;
-    }
-
-    .loading-text {
-      font-family: 'Rajdhani', sans-serif;
-      font-size: 1.2rem;
-      color: var(--primary);
-      letter-spacing: 1px;
-    }
-
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-
-    .pulse {
-      animation: pulse 2s infinite;
-    }
-
-    @keyframes pulse {
-      0% { box-shadow: 0 0 0 0 rgba(0, 247, 255, 0.4); }
-      70% { box-shadow: 0 0 0 15px rgba(0, 247, 255, 0); }
-      100% { box-shadow: 0 0 0 0 rgba(0, 247, 255, 0); }
-    }
-
-    footer {
-      text-align: center;
-      margin-top: 5rem;
-      padding: 2rem 0;
-      color: var(--text-dim);
-      font-size: 0.9rem;
-      border-top: 1px solid rgba(0, 247, 255, 0.2);
-    }
-
-    @media (max-width: 768px) {
-      .container {
-        padding: 1rem;
-      }
-
-      h1 {
-        font-size: 2.5rem;
-      }
-
-      .form-container {
-        padding: 1.5rem;
-      }
-
-      .profession-cards {
-        grid-template-columns: 1fr;
-      }
-
-      .stats {
-        grid-template-columns: 1fr;
-      }
-    }
-  </style>
-</head>
-<script>
-  fetch('/static/html/header.html')
-    .then(res => res.text())
-    .then(data => document.getElementById('header-placeholder').innerHTML = data);
-</script>
-<body>
-  <div id="header-placeholder"></div>
-  <div class="container">
-    <header>
-      <h1>QadamDapp AI</h1>
-      <h2>ПРОФЕССИОНАЛЬНЫЙ ГИД В МИРЕ БУДУЩЕГО</h2>
-      <p class="tagline">Анализируем ваши навыки и интересы, чтобы предложить оптимальные карьерные траектории с актуальными рыночными данными</p>
-    </header>
-
-    <div class="form-container pulse">
-      <form id="career-form">
-        <label for="skills">ВАШИ НАВЫКИ И КОМПЕТЕНЦИИ</label>
-        <textarea name="skills" id="skills" rows="4" placeholder="Например: программирование на Python, аналитическое мышление, управление проектами, графический дизайн..." required></textarea>
-
-        <label for="interests">ВАШИ ИНТЕРЕСЫ И СФЕРЫ РАЗВИТИЯ</label>
-        <textarea name="interests" id="interests" rows="4" placeholder="Например: искусственный интеллект, экологическая устойчивость, цифровой маркетинг..."></textarea>
-
-        <button type="submit" id="analyze-btn">
-          <span id="btn-text">АНАЛИЗИРОВАТЬ ПОТЕНЦИАЛ</span>
-        </button>
-      </form>
-    </div>
-
-    <div class="loading" id="loading">
-      <div class="loading-spinner"></div>
-      <div class="loading-text">АНАЛИЗИРУЕМ ВАШ ПОТЕНЦИАЛ...</div>
-    </div>
-
-    <div class="result-section" id="result-section">
-      <div class="result-tabs">
-        <div class="tab active" data-tab="recommendations">Рекомендации ИИ</div>
-        <div class="tab" data-tab="market">Анализ рынка</div>
-        <div class="tab" data-tab="charts">Визуализация</div>
-      </div>
-
-      <div class="tab-content active" id="recommendations">
-        <div class="ai-recommendations" id="ai-recommendations"></div>
-      </div>
-
-      <div class="tab-content" id="market">
-        <h3 class="chart-title">ТОП-10 ПЕРСПЕКТИВНЫХ ПРОФЕССИЙ</h3>
-        <div class="profession-cards" id="profession-cards"></div>
-      </div>
-
-      <div class="tab-content" id="charts">
-        <div class="chart-container">
-          <h3 class="chart-title">СПРОС НА РЫНКЕ ТРУДА</h3>
-          <canvas id="vacancy-chart" height="250"></canvas>
-        </div>
-
-        <div class="chart-container" style="margin-top: 2rem;">
-          <h3 class="chart-title">УРОВЕНЬ ЗАРПЛАТ</h3>
-          <canvas id="salary-chart" height="250"></canvas>
-        </div>
-      </div>
-    </div>
-
-    <footer>
-      <p>© 2025 QadamDapp AI | Powered by OpenAI & HeadHunter API</p>
-      <p>Все данные актуальны на текущий момент и обновляются в реальном времени</p>
-    </footer>
+{% extends "base.html" %}
+
+{% block title %}Neon Career Navigator{% endblock %}
+
+{% block content %}
+<header class="dark-header">
+  <a href="{{ url_for('index') }}">
+    <img src="{{ url_for('static', filename='logo/logo2.svg') }}" alt="logo" class="header-logo">
+  </a>
+
+  <!-- Кнопка бургер -->
+  <div class="mobile-toggle" id="mobileToggle">☰</div>
+
+  <nav class="menu" id="mainMenu">
+    <a href="{{ url_for('index') }}">Главная</a>
+    <a href="{{ url_for('about') }}">О Нас</a>
+    <a href="{{ url_for('career') }}">AI навыки</a>
+    <a href="{{ url_for('ai_tree') }}">Профориентация</a>
+
+    {% if current_user.is_authenticated %}
+      <a href="{{ url_for('dashboard.dashboard') }}">Дэшборд</a>
+      <a href="{{ url_for('auth.logout') }}">Выйти</a>
+    {% else %}
+      <a href="{{ url_for('auth.login') }}">Войти</a>
+      <a href="{{ url_for('auth.register') }}">Регистрация</a>
+    {% endif %}
+  </nav>
+</header>
+
+<div class="container">
+  <header>
+    <h1>QadamDapp AI</h1>
+    <h2>ПРОФЕССИОНАЛЬНЫЙ ГИД В МИРЕ БУДУЩЕГО</h2>
+    <p class="tagline">
+      Анализируем ваши навыки и интересы, чтобы предложить оптимальные карьерные траектории
+      с актуальными рыночными данными
+    </p>
+  </header>
+
+  <!-- Форма -->
+  <div class="form-container pulse">
+    <form id="career-form">
+      <label for="skills">ВАШИ НАВЫКИ И КОМПЕТЕНЦИИ</label>
+      <textarea id="skills" name="skills" rows="4" placeholder="Например: Python, аналитика, дизайн..." required></textarea>
+
+      <label for="interests">ВАШИ ИНТЕРЕСЫ И СФЕРЫ РАЗВИТИЯ</label>
+      <textarea id="interests" name="interests" rows="4" placeholder="Например: искусственный интеллект, маркетинг..."></textarea>
+
+      <button type="submit" id="analyze-btn">
+        <span id="btn-text">АНАЛИЗИРОВАТЬ ПОТЕНЦИАЛ</span>
+      </button>
+    </form>
   </div>
 
+  <!-- Лоадер -->
+  <div class="loading" id="loading">
+    <div class="loading-spinner"></div>
+    <div class="loading-text">АНАЛИЗИРУЕМ ВАШ ПОТЕНЦИАЛ...</div>
+  </div>
+
+  <!-- Результаты -->
+  <div class="result-section" id="result-section">
+    <div class="result-tabs">
+      <div class="tab active" data-tab="recommendations">Рекомендации ИИ</div>
+      <div class="tab" data-tab="market">Анализ рынка</div>
+      <div class="tab" data-tab="charts">Визуализация</div>
+    </div>
+
+    <div class="tab-content active" id="recommendations">
+      <div class="ai-recommendations" id="ai-recommendations"></div>
+    </div>
+
+    <div class="tab-content" id="market">
+      <h3 class="chart-title">ТОП-10 ПЕРСПЕКТИВНЫХ ПРОФЕССИЙ</h3>
+      <div class="profession-cards" id="profession-cards"></div>
+    </div>
+
+    <div class="tab-content" id="charts">
+      <div class="chart-container">
+        <h3 class="chart-title">СПРОС НА РЫНКЕ ТРУДА</h3>
+        <canvas id="vacancy-chart" height="250"></canvas>
+      </div>
+
+      <div class="chart-container" style="margin-top:2rem;">
+        <h3 class="chart-title">УРОВЕНЬ ЗАРПЛАТ</h3>
+        <canvas id="salary-chart" height="250"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+  <script src="{{ url_for('static', filename='js/career.js') }}"></script>
+
   <script>
-    // Инициализация табов
-    document.querySelectorAll('.tab').forEach(tab => {
-      tab.addEventListener('click', () => {
-        document.querySelector('.tab.active').classList.remove('active');
-        document.querySelector('.tab-content.active').classList.remove('active');
+    // === Бургер меню ===
+    document.addEventListener("DOMContentLoaded", () => {
+      const toggle = document.getElementById("mobileToggle");
+      const menu = document.getElementById("mainMenu");
 
-        tab.classList.add('active');
-        document.getElementById(tab.dataset.tab).classList.add('active');
-      });
-    });
-
-    // Обработка формы
-    document.getElementById('career-form').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const form = e.target;
-      const data = {
-        skills: form.skills.value,
-        interests: form.interests.value
-      };
-
-      // Показываем индикатор загрузки
-      document.getElementById('loading').style.display = 'block';
-      document.getElementById('result-section').style.display = 'none';
-      document.getElementById('analyze-btn').disabled = true;
-      document.getElementById('btn-text').textContent = 'АНАЛИЗ...';
-
-      try {
-        // Получаем рекомендации от ИИ
-        const res = await fetch('/career/predict', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(data)
+      if (toggle && menu) {
+        toggle.addEventListener("click", () => {
+          menu.classList.toggle("open");
         });
-
-        const result = await res.json();
-        if (result.error) throw new Error(result.error);
-
-        // Отображаем рекомендации
-        document.getElementById('ai-recommendations').innerHTML = result.result
-          .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-          .replace(/\n/g, '<br>');
-
-        // Парсим профессии из рекомендаций
-        const professionRegex = /^\d+\.\s*\*\*(.+?)\*\*/gm;
-        const professions = [];
-        let match;
-
-        while ((match = professionRegex.exec(result.result)) !== null) {
-          if (!professions.includes(match[1])) {
-            professions.push(match[1]);
-          }
-        }
-
-        // Получаем данные с HeadHunter
-        const hhRes = await fetch('/career/relevance', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ professions: professions.slice(0, 10) })
-        });
-
-        const hhData = await hhRes.json();
-        if (hhData.error) throw new Error(hhData.error);
-
-        // Сортируем по количеству вакансий
-        hhData.sort((a, b) => b.vacancy_count - a.vacancy_count);
-
-        // Отображаем карточки профессий
-        const cardsContainer = document.getElementById('profession-cards');
-        cardsContainer.innerHTML = '';
-
-        hhData.forEach(profession => {
-          const trendClass = profession.trend.includes('↑') ? 'up' :
-                           profession.trend.includes('↓') ? 'down' : 'neutral';
-
-          const card = document.createElement('div');
-          card.className = 'profession-card';
-          card.innerHTML = `
-            <div class="profession-title">
-              <span>${profession.profession}</span>
-              <span class="salary">${profession.average_salary ? profession.average_salary.toLocaleString() + ' ₸' : 'Н/Д'}</span>
-            </div>
-
-            <div class="stats">
-              <div class="stat-item">
-                <div class="stat-value">${profession.vacancy_count}</div>
-                <div class="stat-label">Вакансий</div>
-              </div>
-              <div class="stat-item">
-                <div class="stat-value">${profession.median_salary ? profession.median_salary.toLocaleString() + ' ₸' : 'Н/Д'}</div>
-                <div class="stat-label">Медианная з/п</div>
-              </div>
-            </div>
-
-            <div>
-              <span class="vacancy-count">${profession.trend}</span>
-              <span class="trend ${trendClass}">${profession.trend}</span>
-            </div>
-
-            <div class="skills-list">
-              <h4>ВОСТРЕБОВАННЫЕ НАВЫКИ:</h4>
-              <div class="skills">
-                ${profession.top_skills.map(skill => `<span class="skill">${skill}</span>`).join('')}
-              </div>
-            </div>
-
-            <a href="${profession.search_url}" target="_blank" style="display: inline-block; margin-top: 1.5rem; color: var(--primary); text-decoration: none;">
-              🔍 Посмотреть вакансии
-            </a>
-          `;
-          cardsContainer.appendChild(card);
-        });
-
-        // Строим графики
-        createCharts(hhData);
-
-        // Показываем результаты
-        document.getElementById('result-section').style.display = 'block';
-
-      } catch (error) {
-        console.error('Error:', error);
-        document.getElementById('ai-recommendations').innerHTML =
-          'Произошла ошибка при анализе данных. Пожалуйста, попробуйте позже или измените параметры запроса.';
-        document.getElementById('result-section').style.display = 'block';
-      } finally {
-        document.getElementById('loading').style.display = 'none';
-        document.getElementById('analyze-btn').disabled = false;
-        document.getElementById('btn-text').textContent = 'АНАЛИЗИРОВАТЬ ПОТЕНЦИАЛ';
       }
     });
-
-    // Функция для создания графиков
-    function createCharts(data) {
-      const sortedByVacancies = [...data].sort((a, b) => b.vacancy_count - a.vacancy_count);
-      const sortedBySalary = [...data].filter(p => p.average_salary)
-                                    .sort((a, b) => b.average_salary - a.average_salary);
-
-      // График вакансий
-      const vacancyCtx = document.getElementById('vacancy-chart').getContext('2d');
-      new Chart(vacancyCtx, {
-        type: 'bar',
-        data: {
-          labels: sortedByVacancies.map(p => p.profession),
-          datasets: [{
-            label: 'Количество вакансий',
-            data: sortedByVacancies.map(p => p.vacancy_count),
-            backgroundColor: 'rgba(0, 247, 255, 0.7)',
-            borderColor: 'rgba(0, 247, 255, 1)',
-            borderWidth: 1
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: {
-              labels: {
-                color: 'rgba(224, 224, 255, 0.9)',
-                font: {
-                  family: "'Rajdhani', sans-serif",
-                  size: 14
-                }
-              }
-            },
-            tooltip: {
-              backgroundColor: 'rgba(10, 10, 26, 0.9)',
-              titleColor: 'rgba(0, 247, 255, 0.9)',
-              bodyColor: 'rgba(224, 224, 255, 0.9)',
-              borderColor: 'rgba(0, 247, 255, 0.3)',
-              borderWidth: 1,
-              callbacks: {
-                label: function(context) {
-                  return ` ${context.raw} вакансий`;
-                }
-              }
-            }
-          },
-          scales: {
-            x: {
-              ticks: {
-                color: 'rgba(160, 160, 192, 0.9)',
-                font: {
-                  family: "'Exo 2', sans-serif"
-                }
-              },
-              grid: {
-                color: 'rgba(0, 247, 255, 0.1)'
-              }
-            },
-            y: {
-              beginAtZero: true,
-              ticks: {
-                color: 'rgba(160, 160, 192, 0.9)'
-              },
-              grid: {
-                color: 'rgba(0, 247, 255, 0.1)'
-              }
-            }
-          }
-        }
-      });
-
-      // График зарплат
-      const salaryCtx = document.getElementById('salary-chart').getContext('2d');
-      new Chart(salaryCtx, {
-        type: 'bar',
-        data: {
-          labels: sortedBySalary.map(p => p.profession),
-          datasets: [
-            {
-              label: 'Средняя зарплата',
-              data: sortedBySalary.map(p => p.average_salary),
-              backgroundColor: 'rgba(123, 45, 255, 0.7)',
-              borderColor: 'rgba(123, 45, 255, 1)',
-              borderWidth: 1,
-              yAxisID: 'y'
-            },
-            {
-              label: 'Медианная зарплата',
-              data: sortedBySalary.map(p => p.median_salary),
-              backgroundColor: 'rgba(255, 0, 247, 0.7)',
-              borderColor: 'rgba(255, 0, 247, 1)',
-              borderWidth: 1,
-              yAxisID: 'y'
-            }
-          ]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: {
-              labels: {
-                color: 'rgba(224, 224, 255, 0.9)',
-                font: {
-                  family: "'Rajdhani', sans-serif",
-                  size: 14
-                }
-              }
-            },
-            tooltip: {
-              backgroundColor: 'rgba(10, 10, 26, 0.9)',
-              titleColor: 'rgba(0, 247, 255, 0.9)',
-              bodyColor: 'rgba(224, 224, 255, 0.9)',
-              borderColor: 'rgba(0, 247, 255, 0.3)',
-              borderWidth: 1,
-              callbacks: {
-                label: function(context) {
-                  return ` ${context.raw.toLocaleString()} ₸`;
-                }
-              }
-            }
-          },
-          scales: {
-            x: {
-              ticks: {
-                color: 'rgba(160, 160, 192, 0.9)',
-                font: {
-                  family: "'Exo 2', sans-serif"
-                }
-              },
-              grid: {
-                color: 'rgba(0, 247, 255, 0.1)'
-              }
-            },
-            y: {
-              beginAtZero: true,
-              ticks: {
-                color: 'rgba(160, 160, 192, 0.9)',
-                callback: function(value) {
-                  return value.toLocaleString() + ' ₸';
-                }
-              },
-              grid: {
-                color: 'rgba(0, 247, 255, 0.1)'
-              }
-            }
-          }
-        }
-      });
-    }
   </script>
-</body>
-</html>
+{% endblock %}

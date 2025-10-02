@@ -1,210 +1,229 @@
-const area = document.getElementById('treeArea');
-const svg = document.getElementById('treeSVG');
-const startBtn = document.getElementById('startBtn');
-const resultBox = document.getElementById('resultBox');
-const vacanciesBox = document.getElementById('vacanciesBox');
+console.log("tree-svg.js подключен ✅");
 
-window.addEventListener('DOMContentLoaded', () => {
-  clearTree();
-  growPath([], 0, 0, 0);
-});
+class CareerTree {
+  constructor() {
+    this.startBtn = document.getElementById("startBtn");
+    this.treeArea = document.getElementById("treeArea");
+    this.resultBox = document.getElementById("resultBox");
+    this.vacanciesBox = document.getElementById("vacanciesBox");
 
+    this.progressBar = document.getElementById("progressBar");
+    this.progressFill = document.getElementById("progressFill");
 
-let maxDepth = 10;
-let nodeWidth = 200, nodeHeight = 60, vSpace = 80, hSpace = 60;
+    this.path = [];
+    this.maxQuestions = 10; // количество шагов
 
-function clearTree() {
-  svg.innerHTML = '';
-  Array.from(document.querySelectorAll('.tree-node')).forEach(el => el.remove());
-  resultBox.classList.remove('show');
-  resultBox.style.display = 'none';
-  vacanciesBox.innerHTML = '';
-  vacanciesBox.style.display = 'none';
-}
-
-function genId() {
-  return '_' + Math.random().toString(36).slice(2,9);
-}
-
-async function fetchNode(path) {
-  const res = await fetch('/ai-tree/api/node', {
-    method: 'POST',
-    headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify({path}),
-  });
-  return await res.json();
-}
-
-async function fetchResult(path) {
-  const res = await fetch('/ai-tree/api/result', {
-    method: 'POST',
-    headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify({path}),
-  });
-  return await res.json();
-}
-
-function drawLoaderNode(nodeId, x, y) {
-  const nodeDiv = document.createElement('div');
-  nodeDiv.className = 'tree-node active';
-  nodeDiv.style.left = `${area.offsetWidth/2 + x}px`;
-  nodeDiv.style.top = `${40 + y}px`;
-  nodeDiv.id = 'n_' + nodeId;
-  nodeDiv.innerHTML = `<div class="inline-loader"></div>`;
-  area.appendChild(nodeDiv);
-}
-
-function drawNode(node) {
-  const nodeDiv = document.createElement('div');
-  nodeDiv.className = 'tree-node active';
-  nodeDiv.style.left = `${area.offsetWidth/2 + node.x}px`;
-  nodeDiv.style.top = `${40 + node.y}px`;
-  nodeDiv.id = 'n_' + node.id;
-  nodeDiv.innerHTML = `<div>${node.question}</div>`;
-  area.appendChild(nodeDiv);
-}
-
-function drawLine(x1, y1, x2, y2) {
-  const line = document.createElementNS('http://www.w3.org/2000/svg','line');
-  line.setAttribute('x1', x1);
-  line.setAttribute('y1', y1);
-  line.setAttribute('x2', x2);
-  line.setAttribute('y2', y2);
-  line.setAttribute('stroke', '#5b69c7');
-  line.setAttribute('stroke-width', '2.2');
-  line.setAttribute('opacity', '0.38');
-  svg.appendChild(line);
-}
-
-async function growPath(path = [], depth = 0, x = 0, y = 0, retry = 0) {
-  if (depth >= maxDepth) return;
-
-  // 1. Покажи лоадер-блок
-  const nodeId = genId();
-  drawLoaderNode(nodeId, x, y);
-
-  let question, options;
-  try {
-    const gpt = await fetchNode(path);
-    question = gpt.question;
-    options = gpt.options;
-    if (!options || options.length < 2 || !options[0] || !options[1]) {
-      if (retry < 3) {
-        document.getElementById('n_' + nodeId).remove();
-        return growPath(path, depth, x, y, retry + 1);
-      } else {
-        question = "Не удалось сгенерировать вопрос.";
-        options = ["Ошибка", "Ошибка"];
-      }
+    if (this.startBtn) {
+      this.startBtn.addEventListener("click", () => this.startJourney());
     }
-  } catch (e) {
-    question = "Ошибка при получении вопроса!";
-    options = ["Ошибка", "Ошибка"];
   }
 
-  // 2. Убери лоадер, покажи реальный вопрос с кнопками
-  document.getElementById('n_' + nodeId).remove();
+  // запуск дерева
+  startJourney() {
+    this.startBtn.style.display = "none";
+    this.progressBar.style.display = "block";
 
-  drawNode({
-    id: nodeId,
-    question, options,
-    x, y,
-    depth
-  });
-
-  // Контейнер для кнопок (горизонтально)
-  const nodeDiv = document.getElementById('n_' + nodeId);
-  const btnContainer = document.createElement('div');
-  btnContainer.style.display = 'flex';
-  btnContainer.style.justifyContent = 'center';
-  btnContainer.style.gap = '14px';
-
-  for (let i = 0; i < 2; ++i) {
-    const btn = document.createElement('button');
-    btn.textContent = options[i];
-    btn.onclick = async () => {
-      btn.disabled = true;
-      btnContainer.querySelectorAll('button').forEach(b=>b.disabled = true);
-
-      let newPath = [...path, {question, answer: options[i]}];
-
-      if (newPath.length >= maxDepth) {
-        // Показываем мини-лоадер в блоке результата
-        resultBox.textContent = '';
-        resultBox.classList.remove('show');
-        resultBox.innerHTML = '<div class="inline-loader"></div>';
-        resultBox.style.display = 'block';
-
-        vacanciesBox.style.display = 'none';
-        vacanciesBox.innerHTML = '';
-
-        const data = await fetchResult(newPath);
-
-        resultBox.innerHTML = '';
-        resultBox.textContent = data.profession;
-        resultBox.classList.add('show');
-
-        // --- Найти профессию по паттерну
-        let professionTitle = '';
-        const match = data.profession.match(/^Профессия:\s*([^\n]+)/i);
-        if (match) {
-          professionTitle = match[1].trim();
-        }
-        if (professionTitle) {
-          showVacancies(professionTitle);
-        }
-        return;
-      }
-
-      let direction = ((depth + 1) % 2 === 0) ? 1 : -1;
-      let nextX = x + direction * 250;
-      let nextY = y + nodeHeight + vSpace;
-
-      growPath(newPath, depth + 1, nextX, nextY);
-
-      setTimeout(() => {
-        drawLine(
-          area.offsetWidth/2 + x + nodeWidth/2,
-          40 + y + nodeHeight,
-          area.offsetWidth/2 + nextX + nodeWidth/2,
-          40 + nextY
-        );
-      }, 0);
-    };
-    btnContainer.appendChild(btn);
+    this.showLoading("Генерируется первый вопрос...");
+    setTimeout(() => {
+      this.updateProgress();
+      this.fetchNextNode();
+    }, 1000);
   }
-  nodeDiv.appendChild(btnContainer);
-}
 
-// Вывод вакансий
-async function showVacancies(professionTitle) {
-  vacanciesBox.style.display = 'block';
-  vacanciesBox.innerHTML = `<div class="inline-loader"></div>`;
-  try {
-    const res = await fetch('/ai-tree/api/vacancies', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({profession: professionTitle})
+  // показать блок загрузки снизу
+  showLoading(text = "Генерация...") {
+    let loadingBox = document.getElementById("loadingBox");
+
+    if (!loadingBox) {
+      loadingBox = document.createElement("div");
+      loadingBox.id = "loadingBox";
+      loadingBox.className = "loading-box";
+      loadingBox.innerHTML = `
+        <div class="spinner"></div>
+        <p>${text}</p>
+      `;
+      this.treeArea.appendChild(loadingBox);
+    } else {
+      loadingBox.querySelector("p").textContent = text;
+      this.treeArea.appendChild(loadingBox);
+    }
+
+    loadingBox.style.display = "block";
+    loadingBox.scrollIntoView({ behavior: "smooth", block: "end" });
+  }
+
+  // скрыть блок загрузки
+  hideLoading() {
+    const loadingBox = document.getElementById("loadingBox");
+    if (loadingBox) {
+      loadingBox.style.display = "none";
+    }
+  }
+
+  // запрос следующего вопроса
+  async fetchNextNode() {
+    try {
+      const response = await fetch("/ai-tree/api/node", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ path: this.path })
+      });
+
+      if (!response.ok) throw new Error(`Ошибка: ${response.status}`);
+
+      const data = await response.json();
+      this.hideLoading();
+      this.renderQuestion(data.question, data.options);
+
+    } catch (err) {
+      console.error(err);
+      this.hideLoading();
+      this.showError("Не удалось загрузить вопрос");
+    }
+  }
+
+  // вывод вопроса и вариантов
+  renderQuestion(question, options) {
+    const qBox = document.createElement("div");
+    qBox.className = "ai-question-box";
+
+    const qText = document.createElement("h3");
+    qText.textContent = question;
+    qBox.appendChild(qText);
+
+    options.forEach(option => {
+      const btn = document.createElement("button");
+      btn.className = "ai-answer-btn";
+      btn.textContent = option;
+
+      btn.addEventListener("click", () => {
+        this.handleAnswer(question, option, btn, qBox);
+      });
+
+      qBox.appendChild(btn);
     });
-    const data = await res.json();
-    if (data.vacancies.length === 0) {
-      vacanciesBox.innerHTML = '<b>Вакансии не найдены.</b>';
+
+    this.treeArea.appendChild(qBox);
+
+    // плавный скролл к новому вопросу
+    qBox.scrollIntoView({ behavior: "smooth", block: "center" });
+  }
+
+  // обработка выбора ответа
+  async handleAnswer(question, answer, selectedBtn, qBox) {
+    this.path.push({ question, answer });
+
+    // выбранный зелёный
+    selectedBtn.classList.add("selected");
+
+    // блокировка всех кнопок
+    const btns = qBox.querySelectorAll("button");
+    btns.forEach(b => {
+      b.disabled = true;
+      if (b !== selectedBtn) {
+        b.classList.add("disabled"); // остальные серые
+      }
+    });
+
+    // обновляем прогресс
+    this.updateProgress();
+
+    // показать загрузку перед следующим вопросом
+    this.showLoading("Генерируется следующий вопрос...");
+
+    setTimeout(() => {
+      if (this.path.length >= this.maxQuestions) {
+        this.fetchResult();
+      } else {
+        this.fetchNextNode();
+      }
+    }, 1200);
+  }
+
+  // запрос результата
+  async fetchResult() {
+    try {
+      const [professionData, vacanciesData] = await Promise.all([
+        this.fetchProfession(),
+        this.fetchVacancies()
+      ]);
+
+      this.hideLoading();
+      this.displayResult(professionData.profession);
+      this.displayVacancies(vacanciesData.vacancies);
+
+    } catch (err) {
+      console.error(err);
+      this.hideLoading();
+      this.showError("Ошибка при получении результата");
+    }
+  }
+
+  // запрос профессии
+  async fetchProfession() {
+    const response = await fetch("/ai-tree/api/result", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ path: this.path })
+    });
+    return await response.json();
+  }
+
+  // запрос вакансий
+  async fetchVacancies() {
+    const profession = this.path[this.path.length - 1]?.answer || "";
+    const response = await fetch("/ai-tree/api/vacancies", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ profession })
+    });
+    return await response.json();
+  }
+
+  // вывод результата
+  displayResult(profession) {
+    this.resultBox.innerHTML = `<h2>Ваш результат</h2><p>${profession}</p>`;
+    this.resultBox.classList.add("show");
+    this.resultBox.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  // вывод вакансий
+  displayVacancies(vacancies) {
+    if (!vacancies || vacancies.length === 0) {
+      this.vacanciesBox.innerHTML = "<h3>Вакансии не найдены</h3>";
       return;
     }
-    vacanciesBox.innerHTML = `<b>Актуальные вакансии на hh.kz:</b><ul>` +
-      data.vacancies.map(v => `
-        <li>
-          <a href="${v.url}" target="_blank">${v.name}</a>
-          <span> — ${v.company || 'Без компании'} ${v.salary ? `(Зарплата: ${v.salary})` : ''}</span>
-        </li>
-      `).join('') +
-      `</ul>`;
-  } catch(e) {
-    vacanciesBox.innerHTML = '<b>Не удалось загрузить вакансии :(</b>';
+
+    this.vacanciesBox.innerHTML = `
+      <h3>Актуальные вакансии</h3>
+      <ul class="vacancies-list">
+        ${vacancies.map(v => `
+          <li class="vacancy-item">
+            <a href="${v.url}" target="_blank">${v.name}</a> — ${v.company}
+            (${v.salary || "з/п не указана"})
+          </li>
+        `).join("")}
+      </ul>
+    `;
+
+    this.vacanciesBox.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  // прогресс
+  updateProgress() {
+    if (!this.progressFill) return;
+    const percent = Math.round((this.path.length / this.maxQuestions) * 100);
+    this.progressFill.style.width = percent + "%";
+  }
+
+  // ошибки
+  showError(msg) {
+    const div = document.createElement("div");
+    div.className = "error-message";
+    div.textContent = msg;
+    this.treeArea.appendChild(div);
+    setTimeout(() => div.remove(), 4000);
   }
 }
 
-// startBtn.onclick = () => {
-//   clearTree();
-//   growPath([], 0, 0, 0);
-// };
+document.addEventListener("DOMContentLoaded", () => new CareerTree());

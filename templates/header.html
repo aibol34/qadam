@@ -1,0 +1,23 @@
+<header class="dark-header">
+  <a href="{{ url_for('index') }}">
+    <img src="{{ url_for('static', filename='logo/logo2.svg') }}" alt="logo" class="header-logo">
+  </a>
+
+  <!-- Кнопка бургер -->
+  <div class="mobile-toggle" id="mobileToggle">☰</div>
+
+  <nav class="menu" id="mainMenu">
+    <a href="{{ url_for('index') }}">Главная</a>
+    <a href="{{ url_for('about') }}">О Нас</a>
+    <a href="{{ url_for('career') }}">AI навыки</a>
+    <a href="{{ url_for('ai_tree') }}">Профориентация</a>
+
+    {% if current_user.is_authenticated %}
+      <a href="{{ url_for('dashboard.dashboard') }}">Дэшборд</a>
+      <a href="{{ url_for('auth.logout') }}">Выйти</a>
+    {% else %}
+      <a href="{{ url_for('auth.login') }}">Войти</a>
+      <a href="{{ url_for('auth.register') }}">Регистрация</a>
+    {% endif %}
+  </nav>
+</header>

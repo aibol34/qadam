@@ -1,0 +1,162 @@
+/* ===== HEADER ===== */
+.dark-header {
+  background: #111124;
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  z-index: 1000;
+  transition: box-shadow 0.4s, background 0.2s;
+}
+
+.dark-header.sticky {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  box-shadow: 0 8px 12px rgba(0,0,0,0.13);
+}
+
+
+/* Лого */
+.header-logo {
+  height: 40px;
+}
+
+/* Меню */
+.menu a {
+  color: #e0e0e0;
+  margin-left: 1.5rem;
+  text-decoration: none;
+  font-size: 1rem;
+  transition: color 0.3s ease;
+}
+
+.menu a:hover {
+  color: #03a9f4;
+}
+
+
+/* ===== FOOTER ===== */
+.site-footer {
+  background: #050510;
+  color: #e0e0ff;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  padding: 3rem 2rem;
+  border-top: 1px solid rgba(0, 247, 255, 0.3);
+  font-family: 'Exo 2', sans-serif;
+}
+
+.footer-section {
+  flex: 1;
+  min-width: 250px;
+  margin-bottom: 2rem;
+}
+
+.footer-title {
+  color: #00f7ff;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+}
+
+.footer-contact {
+  color: #e0e0ff;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.4rem;
+}
+
+.footer-icon {
+  height: 24px;
+  margin-right: 8px;
+  filter: grayscale(1) brightness(0) invert(1);
+}
+
+.dev-button {
+  background: linear-gradient(135deg, #00f7ff, #7b2dff);
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 1rem;
+  font-family: 'Rajdhani', sans-serif;
+  transition: 0.3s ease all;
+}
+
+.dev-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 12px rgba(0,247,255,0.5);
+}
+
+.dev-button a {
+  text-decoration: none;
+  color: #fff;
+}
+
+
+.dark-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #0a0a1a;
+  padding: 1rem 2rem;
+  position: relative;
+}
+
+.header-logo {
+  height: 50px;
+}
+
+.menu {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.menu a {
+  color: #e0e0ff;
+  text-decoration: none;
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 600;
+}
+
+.menu a:hover {
+  color: var(--primary);
+}
+
+/* Бургер-кнопка */
+.mobile-toggle {
+  display: none;
+  font-size: 2rem;
+  color: var(--primary);
+  cursor: pointer;
+}
+
+/* 📱 Адаптив */
+@media (max-width: 768px) {
+  .menu {
+    display: none; /* по умолчанию скрыто */
+    flex-direction: column;
+    position: absolute;
+    top: 70px;
+    right: 20px;
+    background: rgba(10, 10, 26, 0.95);
+    border: 1px solid rgba(0, 247, 255, 0.3);
+    border-radius: 8px;
+    padding: 1rem;
+    z-index: 1000;
+  }
+
+  .menu.open {
+    display: flex;
+  }
+
+  .mobile-toggle {
+    display: block;
+  }
+}

@@ -1,180 +1,132 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>QadamDapp</title>
-  <link rel="stylesheet" href="/static/style.css">
-  <link rel="icon" type="image/svg+xml" href="/static/logo/logo_q.svg">
-</head>
+{% extends "base.html" %}
 
-<body>
-  <section id="intro">
-    <canvas id="starfield"></canvas>
+{% block title %}QadamDapp — Главная{% endblock %}
 
-    <!-- центрированный текст -->
-    <div id="center-text">
-      <span id="icon">
-        <img src="/static/logo/q.svg" alt="icon" height="100" width="100" />
-      </span>
-      <span id="typed-text"></span>
+{% block content %}
+<section id="intro">
+  <canvas id="starfield"></canvas>
+
+  <div id="center-text">
+    <span id="icon">
+      <img src="{{ url_for('static', filename='logo/q.svg') }}" alt="icon" height="100" width="100" />
+    </span>
+    <span id="typed-text"></span>
+  </div>
+</section>
+
+<section class="first-step-section">
+  <div class="first-step-container">
+    <div class="first-step-text">
+      <h2>Твой первый шаг к профессии!</h2>
+      <p>Найди профессию, которая тебе подходит, на основе твоих интересов, навыков и рынка труда Казахстана.</p>
     </div>
-  </section>
-
-  <div id="header-placeholder"></div>
-
-  <section class="first-step-section">
-    <div class="first-step-container">
-      <div class="first-step-text">
-        <h2>Твой первый шаг к профессии!</h2>
-        <p>Найди профессию, которая тебе подходит, на основе твоих интересов, навыков и рынка труда Казахстана.</p>
-      </div>
-      <div class="first-step-img">
-        <img src="/static/logo/raketa.png" alt="Первый шаг к профессии" />
-      </div>
+    <div class="first-step-img">
+      <img src="{{ url_for('static', filename='logo/raketa.png') }}" alt="Первый шаг к профессии" />
     </div>
-  </section>
+  </div>
+</section>
 
-  <section class="fork-section">
-    <div class="center-area">
-        <div class="main-text">Твоя карьера — твой выбор</div>
-        <button class="start-btn" id="startBtn">Начать</button>
+<section class="fork-section">
+  <div class="center-area">
+    <div class="main-text">Твоя карьера — твой выбор</div>
+    <button class="start-btn" id="startBtn">Начать</button>
 
-        <!-- SVG ветки -->
-        <svg class="branch-svg" id="branchSvg" viewBox="0 0 350 100">
-          <path class="branch-path" id="pathLeft" d="M175,0 Q175,55 70,100" style="animation-delay:.1s;animation-play-state:paused"/>
-          <path class="branch-path" id="pathRight" d="M175,0 Q175,55 280,100" style="animation-delay:.25s;animation-play-state:paused"/>
-        </svg>
+    <svg class="branch-svg" id="branchSvg" viewBox="0 0 350 100">
+      <path class="branch-path" d="M175,0 Q175,55 70,100" style="animation-delay:.1s;animation-play-state:paused"/>
+      <path class="branch-path" d="M175,0 Q175,55 280,100" style="animation-delay:.25s;animation-play-state:paused"/>
+    </svg>
 
-        <!-- Кнопки выбора -->
-        <div class="choice-row" id="choiceRow">
-          <a class="choice-btn" href="/career">AI навыки</a>
-          <a class="choice-btn" href="/ai-tree">Профориентация с AI</a>
-        </div>
-      </div>
-  </section>
-
-  <section class="benefits-section">
-    <h2>Наши преимущества</h2>
-    <div class="benefits-grid">
-      <div class="benefit-card">
-        <img class="benefit-icons" src="/static/icons/microchip-ai.png" alt="ai">
-        <div class="benefit-title">ИИ-анализ</div>
-        <div class="benefit-desc">Используем GPT для анализа интересов, чтобы находить точные рекомендации.</div>
-      </div>
-      <div class="benefit-card">
-        <img class="benefit-icons" src="/static/icons/location.png" alt="map">
-        <div class="benefit-title">Адаптация под рынок РК</div>
-        <div class="benefit-desc">Учитываем реальные вакансии, спрос и зарплаты в Казахстане.</div>
-      </div>
-      <div class="benefit-card">
-        <img class="benefit-icons" src="/static/icons/bullseye-arrow(1).png" alt="target">
-        <div class="benefit-title">Индивидуальный подход</div>
-        <div class="benefit-desc">Каждое решение — результат анализа личных ответов студента.</div>
-      </div>
-      <div class="benefit-card">
-        <img class="benefit-icons" src="/static/icons/arrow-trend-up(1).png" alt="up">
-        <div class="benefit-title">Рост и успех</div>
-        <div class="benefit-desc">Ты находишь профессию, в которой сможешь развиваться и реализовать себя.</div>
-      </div>
+    <div class="choice-row" id="choiceRow">
+      <a class="choice-btn" href="{{ url_for('career') }}">AI навыки</a>
+      <a class="choice-btn" href="{{ url_for('ai_tree') }}">Профориентация с AI</a>
     </div>
-  </section>
+  </div>
+</section>
 
-  <section class="stats-section" id="stats">
-    <h2>Статистика</h2>
-    <div class="stats-grid">
-      <div class="stat-card">
-        <div class="stat-number" data-target="12840">0</div>
-        <div class="stat-label">Студентов уже прошли тест</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-number" data-target="65">0</div>
-        <div class="stat-label">Рекомендованных профессий</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-number" data-target="8200">0</div>
-        <div class="stat-label">Профессий точно совпали с интересами</div>
-      </div>
+<section class="benefits-section">
+  <h2>Наши преимущества</h2>
+  <div class="benefits-grid">
+    <div class="benefit-card">
+      <img class="benefit-icons" src="{{ url_for('static', filename='icons/microchip-ai.png') }}" alt="ai">
+      <div class="benefit-title">ИИ-анализ</div>
+      <div class="benefit-desc">Используем GPT для анализа интересов и подбора рекомендаций.</div>
     </div>
-  </section>
+    <div class="benefit-card">
+      <img class="benefit-icons" src="{{ url_for('static', filename='icons/location.png') }}" alt="map">
+      <div class="benefit-title">Адаптация под рынок РК</div>
+      <div class="benefit-desc">Учитываем реальные вакансии и зарплаты Казахстана.</div>
+    </div>
+    <div class="benefit-card">
+      <img class="benefit-icons" src="{{ url_for('static', filename='icons/bullseye-arrow(1).png') }}" alt="target">
+      <div class="benefit-title">Индивидуальный подход</div>
+      <div class="benefit-desc">Каждое решение — результат анализа твоих ответов.</div>
+    </div>
+    <div class="benefit-card">
+      <img class="benefit-icons" src="{{ url_for('static', filename='icons/arrow-trend-up(1).png') }}" alt="up">
+      <div class="benefit-title">Рост и успех</div>
+      <div class="benefit-desc">Ты находишь профессию, где сможешь реализовать себя.</div>
+    </div>
+  </div>
+</section>
 
-  <section class="partners-section" id="partners">
-    <h2>Наши партнеры</h2>
-    <div class="partners">
-      <div class="partners-slider">
-        <div class="partners-track top">
-          <div class="partner-card"><img src="/static/images/4.png" alt="Partner 4"></div>
-          <div class="partner-card"><img src="/static/images/5.png" alt="Partner 5"></div>
-          <div class="partner-card"><img src="/static/images/6.png" alt="Partner 6"></div>
-        </div>
-        <div class="partners-track bottom">
-          <div class="partner-card"><img src="/static/images/2.png" alt="Partner 2"></div>
-          <div class="partner-card"><img src="/static/images/1.png" alt="Partner 1"></div>
-          <div class="partner-card"><img src="/static/images/3.png" alt="Partner 3"></div>
-        </div>
+<section class="stats-section" id="stats">
+  <h2>Статистика</h2>
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-number" data-target="12840">0</div>
+      <div class="stat-label">Студентов прошли тест</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number" data-target="65">0</div>
+      <div class="stat-label">Рекомендованных профессий</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number" data-target="8200">0</div>
+      <div class="stat-label">Совпадений с интересами</div>
+    </div>
+  </div>
+</section>
+
+<section class="partners-section" id="partners">
+  <h2>Наши партнёры</h2>
+  <div class="partners">
+    <div class="partners-slider">
+      <div class="partners-track top">
+        <div class="partner-card"><img src="{{ url_for('static', filename='images/4.png') }}" alt="Partner 4"></div>
+        <div class="partner-card"><img src="{{ url_for('static', filename='images/5.png') }}" alt="Partner 5"></div>
+        <div class="partner-card"><img src="{{ url_for('static', filename='images/6.png') }}" alt="Partner 6"></div>
+      </div>
+      <div class="partners-track bottom">
+        <div class="partner-card"><img src="{{ url_for('static', filename='images/2.png') }}" alt="Partner 2"></div>
+        <div class="partner-card"><img src="{{ url_for('static', filename='images/1.png') }}" alt="Partner 1"></div>
+        <div class="partner-card"><img src="{{ url_for('static', filename='images/3.png') }}" alt="Partner 3"></div>
       </div>
     </div>
-  </section>
+  </div>
+</section>
+{% endblock %}
 
-  <div id="footer-placeholder"></div>
-
-  <!-- Скрипты -->
-  <script src="/static/js/canvas.js" defer></script>
-  <script>
-    // Загружаем header и footer
-    fetch('/static/html/header.html')
-      .then(res => res.text())
-      .then(data => {
-        document.getElementById('header-placeholder').innerHTML = data;
-
-        // Sticky header
-        setTimeout(() => {
-          const header = document.querySelector('.dark-header');
-          const placeholder = document.getElementById('header-placeholder');
-          let headerSpacer = document.getElementById('header-spacer');
-          if (!headerSpacer) {
-            headerSpacer = document.createElement('div');
-            headerSpacer.id = 'header-spacer';
-            headerSpacer.style.height = header.offsetHeight + 'px';
-            headerSpacer.style.display = 'none';
-            placeholder.parentNode.insertBefore(headerSpacer, placeholder.nextSibling);
-          }
-          window.addEventListener('scroll', () => {
-            if (window.scrollY > placeholder.offsetTop) {
-              header.classList.add('sticky');
-              headerSpacer.style.display = 'block';
-            } else {
-              header.classList.remove('sticky');
-              headerSpacer.style.display = 'none';
-            }
-          });
-        }, 10);
-      });
-
-    fetch('/static/html/footer.html')
-      .then(res => res.text())
-      .then(data => document.getElementById('footer-placeholder').innerHTML = data);
-
-    // Анимация текста
-    const text = "adamDapp";
-    const typedText = document.getElementById("typed-text");
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  // Typed animation
+  const typedText = document.getElementById('typed-text');
+  if (typedText) {
+    const text = 'adamDapp';
     let index = 0;
-    function typeWriter() {
+    (function typeWriter() {
       if (index < text.length) {
-        typedText.innerHTML += text.charAt(index);
-        index++;
+        typedText.innerHTML += text.charAt(index++);
         setTimeout(typeWriter, 150);
       } else {
-        setTimeout(() => {
-          typedText.innerHTML = "";
-          index = 0;
-          typeWriter();
-        }, 5000);
+        setTimeout(() => { typedText.innerHTML = ''; index = 0; typeWriter(); }, 5000);
       }
-    }
-    window.addEventListener("load", typeWriter);
+    })();
+  }
 
-    // Счётчики
+  // Counters
+  const statsSection = document.getElementById('stats');
+  if (statsSection) {
     function animateCountUp(el, target, duration = 2000) {
       let start = 0;
       const step = Math.ceil(target / (duration / 20.7));
@@ -190,7 +142,6 @@
     }
     let statsAnimated = false;
     window.addEventListener('scroll', () => {
-      const statsSection = document.getElementById('stats');
       const rect = statsSection.getBoundingClientRect();
       if (!statsAnimated && rect.top < window.innerHeight - 100) {
         document.querySelectorAll('.stat-number').forEach(el => {
@@ -200,12 +151,15 @@
         statsAnimated = true;
       }
     });
+  }
 
-    // Ветки и выбор
-    const startBtn = document.getElementById('startBtn');
-    const branchSvg = document.getElementById('branchSvg');
-    const branchPaths = branchSvg.querySelectorAll('.branch-path');
-    const choiceRow = document.getElementById('choiceRow');
+  // Ветки и выбор
+  const startBtn = document.getElementById('startBtn');
+  const branchSvg = document.getElementById('branchSvg');
+  const choiceRow = document.getElementById('choiceRow');
+  const branchPaths = branchSvg ? branchSvg.querySelectorAll('.branch-path') : [];
+
+  if (startBtn && branchSvg && choiceRow) {
     let branchesShown = false;
     startBtn.addEventListener('click', () => {
       if (branchesShown) return;
@@ -214,7 +168,7 @@
       branchPaths.forEach(path => path.style.animationPlayState = 'running');
       setTimeout(() => choiceRow.classList.add('visible'), 1100);
     });
-  </script>
-  <script src="/static/js/partners.js"></script>
-</body>
-</html>
+  }
+});
+</script>
+{% endblock %}
