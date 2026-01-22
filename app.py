@@ -273,6 +273,29 @@ def get_vacancies():
     return jsonify({"vacancies": vacancies})
 
 
+@app.route("/assistant/chat", methods=["POST"])
+def assistant_chat():
+    data = request.get_json()
+    user_message = data.get("message", "")
+
+    if not user_message:
+        return jsonify({"reply": "Сұрақты жазыңыз 🙂"})
+
+    try:
+        response = client.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "system", "content": "Ты дружелюбный AI-ассистент платформы QadamDapp. Помогаешь с профориентацией, обучением и навигацией по сайту."},
+                {"role": "user", "content": user_message}
+            ],
+            max_tokens=500
+        )
+
+        reply = response.choices[0].message.content.strip()
+        return jsonify({"reply": reply})
+
+    except Exception as e:
+        return jsonify({"reply": f"Ошибка: {str(e)}"})
 
 
 # ==== Запуск ====

@@ -5,20 +5,21 @@
   <title>{% block title %}QadamDapp{% endblock %}</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- Общие стили -->
+  <!-- === Styles === -->
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-  <!-- ВАЖНО: правильное имя файла со стилями хедера/футера -->
   <link rel="stylesheet" href="{{ url_for('static', filename='header_footer.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='auth.css') }}">
-  <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='logo/logo_q.svg') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='career.css') }}">
+
+  <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='logo/logo_q.svg') }}">
 </head>
+
 <body>
 
-  <!-- Хэдер -->
+  <!-- === Header === -->
   {% include "header.html" %}
 
-  <!-- Flash-сообщения -->
+  <!-- === Flash messages === -->
   {% with messages = get_flashed_messages() %}
     {% if messages %}
       <div class="flash-messages">
@@ -29,56 +30,21 @@
     {% endif %}
   {% endwith %}
 
-  <!-- Контент -->
+  <!-- === Main content === -->
   <main>
     {% block content %}{% endblock %}
   </main>
 
-  <!-- Футер -->
+  <!-- === Footer === -->
   {% include "footer.html" %}
 
-  <!-- Глобальные скрипты (если нужны на всех страницах) -->
+  <!-- === Global JS === -->
   <script src="{{ url_for('static', filename='js/canvas.js') }}" defer></script>
   <script src="{{ url_for('static', filename='js/partners.js') }}" defer></script>
+  <script src="{{ url_for('static', filename='js/layout.js') }}" defer></script>
 
-  <!-- Sticky header -->
-  <script>
-    document.addEventListener('scroll', () => {
-      const header = document.querySelector('.dark-header');
-      const intro = document.getElementById('intro');
-      if (!header) return;
-
-      if (intro) {
-        if (window.scrollY > intro.offsetHeight - 80) {
-          header.classList.add('sticky');
-        } else {
-          header.classList.remove('sticky');
-        }
-      } else {
-        header.classList.add('sticky');
-      }
-    });
-  </script>
-
-
-
-{% block scripts %}
-<script src="{{ url_for('static', filename='js/career.js') }}" defer></script>
-{% endblock %}
-
-
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-  const toggle = document.getElementById("mobileToggle");
-  const menu = document.getElementById("mainMenu");
-
-  if (toggle && menu) {
-    toggle.addEventListener("click", () => {
-      menu.classList.toggle("open");
-    });
-  }
-});
-</script>
+  <!-- === Page-specific JS === -->
+  {% block scripts %}{% endblock %}
 
 </body>
 </html>

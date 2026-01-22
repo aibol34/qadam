@@ -31,7 +31,7 @@
     <div class="main-text">Твоя карьера — твой выбор</div>
     <button class="start-btn" id="startBtn">Начать</button>
 
-    <svg class="branch-svg" id="branchSvg" viewBox="0 0 350 100">
+    <svg class="branch-svg" id="branchSvg" viewBox="0 -70 350 100">
       <path class="branch-path" d="M175,0 Q175,55 70,100" style="animation-delay:.1s;animation-play-state:paused"/>
       <path class="branch-path" d="M175,0 Q175,55 280,100" style="animation-delay:.25s;animation-play-state:paused"/>
     </svg>
@@ -72,20 +72,25 @@
 <section class="stats-section" id="stats">
   <h2>Статистика</h2>
   <div class="stats-grid">
-    <div class="stat-card">
-      <div class="stat-number" data-target="12840">0</div>
-      <div class="stat-label">Студентов прошли тест</div>
-    </div>
+
     <div class="stat-card">
       <div class="stat-number" data-target="65">0</div>
-      <div class="stat-label">Рекомендованных профессий</div>
+      <div class="stat-label">Зарегистрированные пользователи</div>
     </div>
+
+    <div class="stat-card">
+      <div class="stat-number" data-target="12840">0</div>
+      <div class="stat-label">Пользователи, прошедшие профориентацию</div>
+    </div>
+
     <div class="stat-card">
       <div class="stat-number" data-target="8200">0</div>
-      <div class="stat-label">Совпадений с интересами</div>
+      <div class="stat-label">Совпадения интересов в профориентации</div>
     </div>
+
   </div>
 </section>
+
 
 <section class="partners-section" id="partners">
   <h2>Наши партнёры</h2>
@@ -99,6 +104,9 @@
     </div>
   </div>
 </section>
+
+
+
 {% endblock %}
 
 {% block scripts %}
@@ -166,4 +174,137 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 });
 </script>
+
+
+
+
+<!-- ================= QADAMDAPP CHAT ================= -->
+
+<div id="chat-toggle">💬</div>
+
+<div id="chat-widget" class="hidden">
+  <div id="chat-header">
+    <span>QadamDapp AI</span>
+    <button id="new-chat-btn" title="Новый чат">🧹</button>
+  </div>
+
+  <div id="chat-messages"></div>
+
+  <div id="chat-input">
+    <input type="text" id="chatText" placeholder="Сұрағыңызды жазыңыз..." />
+    <button onclick="sendMessage()">➤</button>
+  </div>
+</div>
+
+<script>
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const toggleBtn = document.getElementById("chat-toggle");
+    const chatWidget = document.getElementById("chat-widget");
+    const newChatBtn = document.getElementById("new-chat-btn");
+    const input = document.getElementById("chatText");
+    const messages = document.getElementById("chat-messages");
+
+    toggleBtn.onclick = () => chatWidget.classList.toggle("hidden");
+
+    // Сыртқа басқанда жабылады
+    document.addEventListener("click", (e) => {
+      if (!chatWidget.contains(e.target) && !toggleBtn.contains(e.target)) {
+        chatWidget.classList.add("hidden")
+  ;</script
+>
+
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const toggleBtn = document.getElementById("chat-toggle");
+  const chatWidget = document.getElementById("chat-widget");
+  const newChatBtn = document.getElementById("new-chat-btn");
+  const input = document.getElementById("chatText");
+  const messages = document.getElementById("chat-messages");
+
+  // Ашып / жабу
+  toggleBtn.onclick = (e) => {
+    e.stopPropagation();
+    chatWidget.classList.toggle("hidden");
+  };
+
+  // Сыртқа басса жабылады
+  document.addEventListener("click", (e) => {
+    if (!chatWidget.contains(e.target) && !toggleBtn.contains(e.target)) {
+      chatWidget.classList.add("hidden");
+    }
+  });
+
+  // Жаңа чат
+  newChatBtn.onclick = () => {
+    messages.innerHTML = "";
+  };
+
+  // Уақыт функциясы
+  function getTime() {
+    return new Date().toLocaleTimeString("kk-KZ", {
+      hour: "2-digit",
+      minute: "2-digit"
+    });
+  }
+
+  // Жіберу функциясы
+  window.sendMessage = async function () {
+    const text = input.value.trim();
+    if (!text) return;
+
+    // User хабарламасы
+    messages.innerHTML += `
+      <div class="user">
+        ${text}
+        <div class="msg-time">${getTime()}</div>
+      </div>
+    `;
+    input.value = "";
+    messages.scrollTop = messages.scrollHeight;
+
+    // Typing animation
+    const typing = document.createElement("div");
+    typing.className = "bot typing";
+    typing.innerHTML = `<span></span><span></span><span></span>`;
+    messages.appendChild(typing);
+    messages.scrollTop = messages.scrollHeight;
+
+    try {
+      const res = await fetch("/assistant/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: text })
+      });
+
+      const data = await res.json();
+      typing.remove();
+
+      // Bot жауабы + уақыт
+      messages.innerHTML += `
+        <div class="bot">
+          ${data.reply}
+          <div class="msg-time">${getTime()}</div>
+        </div>
+      `;
+      messages.scrollTop = messages.scrollHeight;
+
+    } catch (err) {
+      typing.remove();
+      messages.innerHTML += `<div class="bot" style="color:red">Қате шықты</div>`;
+    }
+  };
+
+  // Enter арқылы жіберу
+  input.addEventListener("keydown", e => {
+    if (e.key === "Enter") sendMessage();
+  });
+});
+</script>
+
+
+
+
+
 {% endblock %}

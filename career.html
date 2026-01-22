@@ -40,14 +40,6 @@
       padding: 2rem;
     }
 
-    header {
-      text-align: center;
-      margin-bottom: 3rem;
-      position: relative;
-      padding: 2rem 0;
-      background: linear-gradient(90deg, transparent, rgba(0, 247, 255, 0.1), transparent);
-    }
-
     h1 {
       font-family: 'Orbitron', sans-serif;
       font-size: 3.5rem;
@@ -438,6 +430,149 @@
       border-top: 1px solid rgba(0, 247, 255, 0.2);
     }
 
+    /* Новые анимации */
+    .typing-animation {
+      overflow: hidden;
+      border-right: 2px solid var(--primary);
+      white-space: pre-wrap;
+      animation: typing 3s steps(100, end), blink-caret 0.75s step-end infinite;
+    }
+
+    @keyframes typing {
+      from { width: 0 }
+      to { width: 100% }
+    }
+
+    @keyframes blink-caret {
+      from, to { border-color: transparent }
+      50% { border-color: var(--primary) }
+    }
+
+    .fade-in-up {
+      animation: fadeInUp 0.6s ease forwards;
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    @keyframes fadeInUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .stagger-animation > * {
+      opacity: 0;
+      animation: fadeInUp 0.5s ease forwards;
+    }
+
+    .glow-pulse {
+      animation: glowPulse 2s infinite alternate;
+    }
+
+    @keyframes glowPulse {
+      from { box-shadow: 0 0 10px rgba(0, 247, 255, 0.3); }
+      to { box-shadow: 0 0 20px rgba(0, 247, 255, 0.6), 0 0 30px rgba(123, 45, 255, 0.4); }
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 4px;
+      background: rgba(0, 247, 255, 0.1);
+      border-radius: 2px;
+      overflow: hidden;
+      margin: 1rem 0;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      width: 0%;
+      animation: loadingProgress 2s ease-in-out infinite;
+    }
+
+    @keyframes loadingProgress {
+      0% { width: 0%; transform: translateX(-100%); }
+      50% { width: 100%; transform: translateX(0%); }
+      100% { width: 0%; transform: translateX(100%); }
+    }
+
+    .particles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .particle {
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      background: var(--primary);
+      border-radius: 50%;
+      animation: float 20s infinite linear;
+    }
+
+    @keyframes float {
+      0% {
+        transform: translateY(100vh) translateX(0);
+        opacity: 0;
+      }
+      10% {
+        opacity: 0.7;
+      }
+      90% {
+        opacity: 0.7;
+      }
+      100% {
+        transform: translateY(-100px) translateX(100px);
+        opacity: 0;
+      }
+    }
+
+    .ai-text-reveal {
+      opacity: 0;
+      animation: textReveal 0.05s ease forwards;
+    }
+
+    @keyframes textReveal {
+      to {
+        opacity: 1;
+      }
+    }
+
+    .chart-animate {
+      opacity: 0;
+      animation: chartAppear 1s ease forwards;
+    }
+
+    @keyframes chartAppear {
+      from {
+        opacity: 0;
+        transform: scale(0.9);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    .card-appear {
+      opacity: 0;
+      transform: translateY(30px) rotateX(-10deg);
+      animation: cardAppear 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    }
+
+    @keyframes cardAppear {
+      to {
+        opacity: 1;
+        transform: translateY(0) rotateX(0);
+      }
+    }
+
     @media (max-width: 768px) {
       .container {
         padding: 1rem;
@@ -461,18 +596,16 @@
     }
   </style>
 </head>
-<script>
-  fetch('/static/html/header.html')
-    .then(res => res.text())
-    .then(data => document.getElementById('header-placeholder').innerHTML = data);
-</script>
+
 <body>
-  <div id="header-placeholder"></div>
+  <!-- Частицы на фоне -->
+  <div class="particles" id="particles"></div>
+
   <div class="container">
-    <header>
-      <h1>QadamDapp AI</h1>
-      <h2>ПРОФЕССИОНАЛЬНЫЙ ГИД В МИРЕ БУДУЩЕГО</h2>
-      <p class="tagline">Анализируем ваши навыки и интересы, чтобы предложить оптимальные карьерные траектории с актуальными рыночными данными</p>
+    <header style="text-align: center; margin-bottom: 3rem;">
+      <h1>NEON CAREER NAVIGATOR</h1>
+      <h2>ИСКУССТВЕННЫЙ ИНТЕЛЛЕКТ ДЛЯ ВАШЕЙ КАРЬЕРЫ</h2>
+      <p class="tagline">Анализируем ваш потенциал, сопоставляем с рынком труда и создаем персонализированную карту развития</p>
     </header>
 
     <div class="form-container pulse">
@@ -485,13 +618,23 @@
 
         <button type="submit" id="analyze-btn">
           <span id="btn-text">АНАЛИЗИРОВАТЬ ПОТЕНЦИАЛ</span>
+          <span id="btn-loader" style="display: none;">🌀</span>
         </button>
       </form>
     </div>
 
+    <!-- Улучшенный индикатор загрузки -->
     <div class="loading" id="loading">
-      <div class="loading-spinner"></div>
-      <div class="loading-text">АНАЛИЗИРУЕМ ВАШ ПОТЕНЦИАЛ...</div>
+      <div class="loading-spinner glow-pulse"></div>
+      <div class="loading-text" id="loading-text">ПОДКЛЮЧАЕМСЯ К ИИ...</div>
+      <div class="progress-bar">
+        <div class="progress-fill"></div>
+      </div>
+      <div id="loading-steps" style="color: var(--text-dim); margin-top: 1rem; font-size: 0.9rem;">
+        <div id="step-1">⚡ Анализируем навыки...</div>
+        <div id="step-2" style="opacity: 0.5;">📊 Сканируем рынок труда...</div>
+        <div id="step-3" style="opacity: 0.5;">🎯 Формируем рекомендации...</div>
+      </div>
     </div>
 
     <div class="result-section" id="result-section">
@@ -511,12 +654,12 @@
       </div>
 
       <div class="tab-content" id="charts">
-        <div class="chart-container">
+        <div class="chart-container chart-animate">
           <h3 class="chart-title">СПРОС НА РЫНКЕ ТРУДА</h3>
           <canvas id="vacancy-chart" height="250"></canvas>
         </div>
 
-        <div class="chart-container" style="margin-top: 2rem;">
+        <div class="chart-container chart-animate" style="margin-top: 2rem;">
           <h3 class="chart-title">УРОВЕНЬ ЗАРПЛАТ</h3>
           <canvas id="salary-chart" height="250"></canvas>
         </div>
@@ -531,6 +674,22 @@
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script>
+    // Создаем частицы на фоне
+    function createParticles() {
+      const particlesContainer = document.getElementById('particles');
+      for (let i = 0; i < 50; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        particle.style.left = `${Math.random() * 100}%`;
+        particle.style.animationDelay = `${Math.random() * 20}s`;
+        particle.style.animationDuration = `${15 + Math.random() * 10}s`;
+        particle.style.opacity = Math.random() * 0.5 + 0.2;
+        particlesContainer.appendChild(particle);
+      }
+    }
+
+    createParticles();
+
     // Инициализация табов
     document.querySelectorAll('.tab').forEach(tab => {
       tab.addEventListener('click', () => {
@@ -538,11 +697,75 @@
         document.querySelector('.tab-content.active').classList.remove('active');
 
         tab.classList.add('active');
-        document.getElementById(tab.dataset.tab).classList.add('active');
+        const tabContent = document.getElementById(tab.dataset.tab);
+        tabContent.classList.add('active');
+
+        // Анимация для графиков при переключении
+        if (tab.dataset.tab === 'charts') {
+          document.querySelectorAll('.chart-container').forEach(container => {
+            container.classList.add('chart-animate');
+          });
+        }
       });
     });
 
-    // Обработка формы
+    // Анимация текста по буквам
+    function typeText(element, text, speed = 10) {
+      return new Promise((resolve) => {
+        let i = 0;
+        element.innerHTML = '';
+        const timer = setInterval(() => {
+          if (i < text.length) {
+            const char = text.charAt(i);
+            const span = document.createElement('span');
+            span.className = 'ai-text-reveal';
+            span.style.animationDelay = `${(i * speed) / 1000}s`;
+            span.textContent = char;
+            element.appendChild(span);
+            i++;
+          } else {
+            clearInterval(timer);
+            resolve();
+          }
+        }, speed);
+      });
+    }
+
+    // Поэтапная загрузка
+    function updateLoadingStep(step) {
+      const steps = document.querySelectorAll('#loading-steps > div');
+      steps.forEach((s, index) => {
+        if (index + 1 === step) {
+          s.style.opacity = '1';
+          s.style.transform = 'scale(1.05)';
+          s.style.transition = 'all 0.3s ease';
+        } else if (index + 1 < step) {
+          s.style.opacity = '0.8';
+        }
+      });
+
+      const messages = [
+        '⚡ Анализируем навыки...',
+        '📊 Сканируем рынок труда...',
+        '🎯 Формируем рекомендации...',
+        '✨ Завершаем обработку...'
+      ];
+
+      if (step <= messages.length) {
+        document.getElementById('loading-text').textContent = messages[step - 1];
+      }
+    }
+
+    // Анимация появления карточек
+    function animateCards() {
+      const cards = document.querySelectorAll('.profession-card');
+      cards.forEach((card, index) => {
+        card.classList.add('card-appear');
+        card.style.animationDelay = `${index * 0.1}s`;
+      });
+    }
+
+    // Обработка формы с улучшенными анимациями
     document.getElementById('career-form').addEventListener('submit', async (e) => {
       e.preventDefault();
       const form = e.target;
@@ -551,13 +774,25 @@
         interests: form.interests.value
       };
 
-      // Показываем индикатор загрузки
+      // Показываем индикатор загрузки с анимацией
       document.getElementById('loading').style.display = 'block';
       document.getElementById('result-section').style.display = 'none';
       document.getElementById('analyze-btn').disabled = true;
-      document.getElementById('btn-text').textContent = 'АНАЛИЗ...';
+      document.getElementById('btn-text').style.display = 'none';
+      document.getElementById('btn-loader').style.display = 'inline';
+
+      // Запускаем анимацию шагов
+      let step = 1;
+      const stepInterval = setInterval(() => {
+        updateLoadingStep(step);
+        step++;
+        if (step > 4) step = 1;
+      }, 800);
 
       try {
+        // Симуляция задержки для демонстрации анимаций
+        await new Promise(resolve => setTimeout(resolve, 1500));
+
         // Получаем рекомендации от ИИ
         const res = await fetch('/career/predict', {
           method: 'POST',
@@ -568,10 +803,12 @@
         const result = await res.json();
         if (result.error) throw new Error(result.error);
 
-        // Отображаем рекомендации
-        document.getElementById('ai-recommendations').innerHTML = result.result
+        // Отображаем рекомендации с анимацией печати
+        const aiText = result.result
           .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
           .replace(/\n/g, '<br>');
+
+        await typeText(document.getElementById('ai-recommendations'), aiText, 5);
 
         // Парсим профессии из рекомендаций
         const professionRegex = /^\d+\.\s*\*\*(.+?)\*\*/gm;
@@ -584,6 +821,10 @@
           }
         }
 
+        // Обновляем шаг загрузки
+        updateLoadingStep(2);
+        await new Promise(resolve => setTimeout(resolve, 1000));
+
         // Получаем данные с HeadHunter
         const hhRes = await fetch('/career/relevance', {
           method: 'POST',
@@ -594,19 +835,24 @@
         const hhData = await hhRes.json();
         if (hhData.error) throw new Error(hhData.error);
 
+        // Обновляем шаг загрузки
+        updateLoadingStep(3);
+        await new Promise(resolve => setTimeout(resolve, 800));
+
         // Сортируем по количеству вакансий
         hhData.sort((a, b) => b.vacancy_count - a.vacancy_count);
 
-        // Отображаем карточки профессий
+        // Отображаем карточки профессий с анимацией
         const cardsContainer = document.getElementById('profession-cards');
         cardsContainer.innerHTML = '';
 
-        hhData.forEach(profession => {
+        hhData.forEach((profession, index) => {
           const trendClass = profession.trend.includes('↑') ? 'up' :
                            profession.trend.includes('↓') ? 'down' : 'neutral';
 
           const card = document.createElement('div');
           card.className = 'profession-card';
+          card.style.opacity = '0';
           card.innerHTML = `
             <div class="profession-title">
               <span>${profession.profession}</span>
@@ -643,21 +889,32 @@
           cardsContainer.appendChild(card);
         });
 
-        // Строим графики
+        // Анимируем появление карточек
+        animateCards();
+
+        // Строим графики с анимацией
         createCharts(hhData);
 
-        // Показываем результаты
+        // Обновляем шаг загрузки
+        updateLoadingStep(4);
+        await new Promise(resolve => setTimeout(resolve, 500));
+
+        // Показываем результаты с анимацией
         document.getElementById('result-section').style.display = 'block';
+        document.getElementById('result-section').classList.add('fade-in-up');
 
       } catch (error) {
         console.error('Error:', error);
         document.getElementById('ai-recommendations').innerHTML =
-          'Произошла ошибка при анализе данных. Пожалуйста, попробуйте позже или измените параметры запроса.';
+          '<span style="color: var(--danger)">Произошла ошибка при анализе данных. Пожалуйста, попробуйте позже или измените параметры запроса.</span>';
         document.getElementById('result-section').style.display = 'block';
+        document.getElementById('result-section').classList.add('fade-in-up');
       } finally {
+        clearInterval(stepInterval);
         document.getElementById('loading').style.display = 'none';
         document.getElementById('analyze-btn').disabled = false;
-        document.getElementById('btn-text').textContent = 'АНАЛИЗИРОВАТЬ ПОТЕНЦИАЛ';
+        document.getElementById('btn-text').style.display = 'inline';
+        document.getElementById('btn-loader').style.display = 'none';
       }
     });
 
@@ -728,6 +985,10 @@
                 color: 'rgba(0, 247, 255, 0.1)'
               }
             }
+          },
+          animation: {
+            duration: 1500,
+            easing: 'easeOutQuart'
           }
         }
       });
@@ -807,10 +1068,20 @@
                 color: 'rgba(0, 247, 255, 0.1)'
               }
             }
+          },
+          animation: {
+            duration: 1500,
+            easing: 'easeOutQuart',
+            delay: 300
           }
         }
       });
     }
+
+    // Анимация при загрузке страницы
+    document.addEventListener('DOMContentLoaded', () => {
+      document.querySelector('.form-container').classList.add('fade-in-up');
+    });
   </script>
 </body>
 </html>
